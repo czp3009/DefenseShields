@@ -238,6 +238,7 @@ namespace DefenseShields.Support
         public bool RefreshNow;
         public bool EnemySafeInside;
         public bool WasInside;
+        public bool Slowed;
         public volatile bool Touched;
         public volatile uint LastCollision;
         public int ConsecutiveCollisions;
@@ -252,6 +253,7 @@ namespace DefenseShields.Support
             Relation = relation;
             RefreshNow = true;
             WasInside = wasInside;
+            Slowed = false;
             if (relation == DefenseShields.Ent.EnemyInside) EnemySafeInside = true;
         }
 
@@ -264,6 +266,7 @@ namespace DefenseShields.Support
             EnemySafeInside = false;
             RefreshNow = false;
             Touched = false;
+            Slowed = false;
             CacheBlockList.Clear();
             RefreshTick = 0;
             LastCollision = 0;

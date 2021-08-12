@@ -95,14 +95,14 @@
 
                 Timings();
 
+                LogicUpdates();
+                SplitMonitor();
+
                 if (!ThreadEvents.IsEmpty)
                 {
                     IThreadEvent tEvent;
                     while (ThreadEvents.TryDequeue(out tEvent)) tEvent.Execute();
                 }
-
-                LogicUpdates();
-                SplitMonitor();
             }
             catch (Exception ex) { Log.Line($"Exception in SessionBeforeSim: {ex}"); }
         }

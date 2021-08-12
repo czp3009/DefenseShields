@@ -273,11 +273,11 @@ namespace DefenseShields
             _batteryCurrentOutput = 0;
             _batteryCurrentInput = 0;
 
-            if (MyResourceDist == null || MyResourceDist.SourcesEnabled == MyMultipleEnabledEnum.NoObjects)
+            if (MyResourceDist == null || MyResourceDist.SourcesEnabled == MyMultipleEnabledEnum.NoObjects || _checkResourceDist)
                 ResetDistributor();
 
-            GridMaxPower = MyResourceDist.MaxAvailableResourceByType(GId);
-            GridCurrentPower = MyResourceDist.TotalRequiredInputByType(GId);
+            GridMaxPower = MyResourceDist.MaxAvailableResourceByType(GId, MyGrid);
+            GridCurrentPower = MyResourceDist.TotalRequiredInputByType(GId, MyGrid);
             if (!DsSet.Settings.UseBatteries) CalculateBatteryInput();
 
             GridAvailablePower = GridMaxPower - GridCurrentPower;

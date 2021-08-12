@@ -34,11 +34,11 @@ namespace DefenseShields.Support
             const int DisableEntityBarrier = 0;
             const int Debug = 1;
             const int SuperWeapons = 1;
-            const int Version = 84;
+            const int Version = 85;
             const float BlockScaler = 1f;
             const float PowerScaler = 1f;
             const float SizeScaler = 7.5f;
-            const float PowerCellMw = 30f;
+            const float PowerCellMw = 22.5f;
             const float HpsEfficiency = 0.25f;
             const float MaintenanceCost = 0.5f;
             const int DisableBlockDamage = 0;
@@ -83,9 +83,9 @@ namespace DefenseShields.Support
                 Session.Enforced.DisableBlockDamage = !unPackedData.DisableBlockDamage.Equals(-1) ? unPackedData.DisableBlockDamage : DisableBlockDamage;
                 Session.Enforced.DisableLineOfSight = !unPackedData.DisableLineOfSight.Equals(-1) ? unPackedData.DisableLineOfSight : DisableLineOfSight;
                 Session.Enforced.OverloadTime = !unPackedData.OverloadTime.Equals(-1) ? unPackedData.OverloadTime : OverloadTime;
-                if (unPackedData.Version <= 83)
+                if (unPackedData.Version <= 84 || Session.Enforced.MwPerCell <= 0)
                 {
-                    Session.Enforced.MwPerCell = 30f;
+                    Session.Enforced.MwPerCell = 22.5f;
                 }
                 if (unPackedData.Version <= 82)
                 {

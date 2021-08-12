@@ -81,10 +81,15 @@ namespace DefenseShields
 
         private void UpdateSubGrids()
         {
+            var subUpdate = _subUpdate;
             _subUpdate = false;
+            
             if (_subUpdatedTick  == _tick || SubGridUpdateSkip())
                 return;
 
+            if (!_checkResourceDist && subUpdate)
+                _checkResourceDist = true;
+            
             _subUpdatedTick = _tick;
             ShieldComp.LinkedGrids.Clear();
 
@@ -216,7 +221,7 @@ namespace DefenseShields
                         _slavedToGrid = ds.MyGrid;
                         if (_slavedToGrid != null)
                         {
-                            if (_isServer && !ds.IsStatic && DsState.State.Charge > 0)
+                            if (_isServer && !ds.IsStatic && !DsState.State.Lowered && DsState.State.Charge > 0)
                                 DsState.State.Charge = 0;
                             return true;
                         }

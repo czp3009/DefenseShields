@@ -176,6 +176,20 @@ namespace DefenseShields.Support
             var foundInfo = Shield.WebEnts.TryGetValue(CollisionData.Entity1, out entInfo);
             if (!foundInfo || entInfo.LastCollision == tick) return;
 
+            if (!entInfo.Slowed && !CollisionData.E1IsStatic && !CollisionData.E1IsHeavier && (CollisionData.E2IsStatic || CollisionData.Mass2 / CollisionData.Mass1 >= 10))
+            {
+                var penVel = CollisionData.Entity1.Physics.LinearVelocity;
+                var shieldVel = CollisionData.Entity2.Physics.LinearVelocity;
+                var velDelta = penVel - shieldVel;
+                var velDeltaLen = velDelta.Length();
+                if (velDeltaLen > 50 && shieldVel.LengthSquared() < penVel.LengthSquared())
+                {
+                    var penVelLen = penVel.Length();
+                    var reduction = MathHelper.Clamp((velDeltaLen + 50) - penVelLen, 0, velDeltaLen - 50);
+                    CollisionData.Entity1.Physics.SetSpeeds(Vector3D.ClampToSphere(CollisionData.Entity1.Physics.LinearVelocity, reduction), CollisionData.Entity1.Physics.AngularVelocity);
+                    entInfo.Slowed = true;
+                }
+            }
             if (entInfo.LastCollision >= tick - 8) entInfo.ConsecutiveCollisions++;
             else entInfo.ConsecutiveCollisions = 0;
             entInfo.LastCollision = tick;

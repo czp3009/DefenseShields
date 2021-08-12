@@ -259,6 +259,7 @@ namespace DefenseShields
             Warming = false;
             WarmedUp = false;
             _resetEntity = false;
+            _checkResourceDist = true;
 
             ResetComp();
 
@@ -345,6 +346,7 @@ namespace DefenseShields
 
         private void ResetDistributor()
         {
+            _checkResourceDist = false;
             MyResourceDist = FakeController.GridResourceDistributor;
         }
 
@@ -359,7 +361,7 @@ namespace DefenseShields
                     MaxRequiredInput = 0f,
                     RequiredInputFunc = () => _power
                 };
-                _sink.Init(MyStringHash.GetOrCompute("Defense"), _resourceInfo);
+                _sink.Init(MyStringHash.GetOrCompute("Defense"), _resourceInfo, (MyCubeBlock)Entity);
                 _sink.AddType(ref _resourceInfo);
                 Entity.Components.Add(_sink);
             }
@@ -455,13 +457,15 @@ namespace DefenseShields
 
         private void InitEntities(bool fullInit)
         {
-            if (ShieldEnt != null)
-            {
+            if (ShieldEnt != null) {
                 Session.Instance.IdToBus.Remove(ShieldEnt.EntityId);
                 ShieldEnt.Close();
             }
+
             ShellActive?.Close();
             _shellPassive?.Close();
+
+            _checkResourceDist = true;
 
             if (!fullInit)
             {

@@ -247,7 +247,7 @@ namespace DefenseShields
         private bool _adjustShape;
         private bool _updateCap;
         private bool _sendMessage;
-
+        private bool _checkResourceDist;
         private string _modelActive = "\\Models\\Cubes\\ShieldActiveBaseAlt.mwm";
         private string _modelPassive = string.Empty;
 

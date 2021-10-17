@@ -176,7 +176,9 @@ namespace DefenseShields.Support
             var foundInfo = Shield.WebEnts.TryGetValue(CollisionData.Entity1, out entInfo);
             if (!foundInfo || entInfo.LastCollision == tick) return;
 
-            if (!entInfo.Slowed && !CollisionData.E1IsStatic && !CollisionData.E1IsHeavier && (CollisionData.E2IsStatic || CollisionData.Mass2 / CollisionData.Mass1 >= 10))
+            var fortified = Shield.DsSet.Settings.FortifyShield && Shield.DsState.State.Enhancer;
+
+            if (!entInfo.Slowed && !CollisionData.E1IsStatic && (!CollisionData.E1IsHeavier || fortified) && (CollisionData.E2IsStatic || fortified || CollisionData.Mass2 / CollisionData.Mass1 >= 10))
             {
                 var penVel = CollisionData.Entity1.Physics.LinearVelocity;
                 var shieldVel = CollisionData.Entity2.Physics.LinearVelocity;
@@ -197,7 +199,7 @@ namespace DefenseShields.Support
             if (!CollisionData.E1IsStatic)
             {
                 if (entInfo.ConsecutiveCollisions == 0) CollisionData.Entity1.Physics.ApplyImpulse(CollisionData.ImpDirection1, CollisionData.CollisionCorrection1);
-                if (CollisionData.E2IsHeavier)
+                if (CollisionData.E2IsHeavier || fortified)
                 {
                     var accelCap = CollisionData.E1IsStatic ? 10 : 25;
                     var accelClamp = MathHelper.Clamp(CollisionData.Mass2 / CollisionData.Mass1, 1, accelCap);
@@ -209,7 +211,6 @@ namespace DefenseShields.Support
                 }
             }
 
-            var fortified = Shield.DsSet.Settings.FortifyShield && Shield.DsState.State.Enhancer;
             if (!CollisionData.E2IsStatic && !fortified)
             {
                 if (entInfo.ConsecutiveCollisions == 0) CollisionData.Entity2.Physics.ApplyImpulse(CollisionData.ImpDirection2, CollisionData.CollisionCorrection2);

@@ -415,6 +415,7 @@
 
             float sMass;
             if (e2IsStatic) sMass = float.MaxValue * 0.001f;
+            else if (DsSet.Settings.FortifyShield && DsState.State.Enhancer) sMass = entity2.GetCurrentMass() * 2;
             else sMass = entity2.GetCurrentMass();
             var bCom = e1Physics.CenterOfMassWorld;
             var bMassRelation = bMass / sMass;

@@ -246,11 +246,17 @@ namespace DefenseShields
                 EllipsoidVolume = 1.333333 * Math.PI * DetectMatrixOutside.Scale.X * DetectMatrixOutside.Scale.Y * DetectMatrixOutside.Scale.Z;
                 var magicMod = DsState.State.Enhancer && ShieldMode == ShieldType.Station ? 100f : DsState.State.Enhancer && DsSet.Settings.FortifyShield ? 10f + Math.Sqrt(DsSet.Settings.Fit) : 1f;
                 var ellipsoidMagic = _ellipsoidSurfaceArea / (MagicEllipsoidRatio * magicMod);
-               
                 var rawScaler = Math.Sqrt(ellipsoidMagic);
 
                 var adjustment = rawScaler > 100 ? Session.Enforced.SizeScaler : rawScaler > 10 ? Session.Enforced.SizeScaler / 10 : rawScaler > 1 ? Session.Enforced.SizeScaler / 50 : rawScaler;
-                _sizeScaler = (float) (Session.Enforced.SizeScaler > 1 ? (float)(Math.Round(rawScaler / adjustment) * adjustment) : rawScaler);
+
+                _sizeScaler = (float) (Session.Enforced.SizeScaler > 1 ? (Math.Round(rawScaler / adjustment) * adjustment) : rawScaler);
+
+                var volumeModifier = (float)(Math.Sqrt(Math.Log10(_sizeScaler * (DsState.State.GridHalfExtents.Volume))) - 1);
+                if (DsState.State.CapModifier >= 1 && volumeModifier >= 1)
+                    _sizeScaler /= volumeModifier;
+                
+                //Log.Line($"{MyGrid.DebugName} - surface: {_ellipsoidSurfaceArea} - magic:{ellipsoidMagic} - raw:{rawScaler} - final:{_sizeScaler} - Volume:{Math.Sqrt(Math.Log10(_sizeScaler * (ShieldSize.Volume))) - 1}]");
 
                 if (_isServer) {
                     ShieldChangeState();

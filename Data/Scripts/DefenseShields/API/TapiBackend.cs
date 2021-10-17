@@ -62,6 +62,7 @@ namespace DefenseShields
             ["AddAttacker"] = new Action<long>(TAPI_AddAttacker),
             ["IsBlockProtected"] = new Func<IMySlimBlock, bool>(TAPI_IsBlockProtected),
             ["GetLastAttackers"] = new Action<MyEntity, ICollection<MyTuple<long, float, uint>>>(TAPI_GetLastAttackers),
+            ["IsFortified"] = new Func<IMyTerminalBlock, bool>(TAPI_IsFortified),
         };
 
         private readonly Dictionary<string, Delegate> _terminalPbApiMethods = new Dictionary<string, Delegate>()
@@ -239,6 +240,16 @@ namespace DefenseShields
                 ds.AttackerLast.Enqueue(attackerId);
             }
         }
+
+        private static bool TAPI_IsFortified(IMyTerminalBlock block)
+        {
+            var logic = block?.GameLogic?.GetAs<DefenseShields>()?.ShieldComp?.DefenseShields;
+            if (logic == null) return false;
+
+            var fortify = logic.DsSet.Settings.FortifyShield && logic.DsState.State.Enhancer;
+            return logic.DsState.State.Online && !logic.DsState.State.Lowered && fortify;
+        }
+
 
         private static MyTuple<bool, Vector3I> TAPI_GetFacesFast(MyEntity entity)
         {

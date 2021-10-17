@@ -209,7 +209,8 @@ namespace DefenseShields.Support
                 }
             }
 
-            if (!CollisionData.E2IsStatic)
+            var fortified = Shield.DsSet.Settings.FortifyShield && Shield.DsState.State.Enhancer;
+            if (!CollisionData.E2IsStatic && !fortified)
             {
                 if (entInfo.ConsecutiveCollisions == 0) CollisionData.Entity2.Physics.ApplyImpulse(CollisionData.ImpDirection2, CollisionData.CollisionCorrection2);
                 if (CollisionData.E1IsHeavier)

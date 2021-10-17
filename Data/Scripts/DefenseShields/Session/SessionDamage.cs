@@ -26,7 +26,6 @@ namespace DefenseShields
             {
                 var damageType = info.Type;
                 if (damageType == MpIgnoreDamage || damageType == MyDamageType.Drill || damageType == MyDamageType.Grind || ManagedAttackers.ContainsKey(info.AttackerId)) return;
-
                 var block = target as IMySlimBlock;
                 var character = target as IMyCharacter;
                 if (block != null)
@@ -190,7 +189,7 @@ namespace DefenseShields
                                     attackingVoxel.RootVoxel.RequestVoxelOperationElipsoid(Vector3.One, iShield.DetectMatrixOutside, 0, MyVoxelBase.OperationType.Cut);
                                 }
                             }
-                            var dmgAmount = info.Amount * 10;
+                            var dmgAmount = info.Amount;
                             if (IsServer)
                             {
                                 iShield.AddShieldHit(attackerId, dmgAmount, damageType, block, false);

@@ -551,9 +551,9 @@ namespace DefenseShields
             foreach (var sub in ShieldComp.SubGrids.Keys) {
 
 
-                var xCount = MyGrid.PositionComp.LocalAABB.Extents.X / MyGrid.GridSize;
-                var yCount = MyGrid.PositionComp.LocalAABB.Extents.Y / MyGrid.GridSize;
-                var zCount = MyGrid.PositionComp.LocalAABB.Extents.Z / MyGrid.GridSize;
+                var xCount = sub.PositionComp.LocalAABB.Extents.X / sub.GridSize;
+                var yCount = sub.PositionComp.LocalAABB.Extents.Y / sub.GridSize;
+                var zCount = sub.PositionComp.LocalAABB.Extents.Z / sub.GridSize;
                 var maxCubes = Math.Round(xCount * yCount * zCount, 0);
                 maxSize += maxCubes;
                 foreach (IMySlimBlock slim in sub.CubeBlocks) {

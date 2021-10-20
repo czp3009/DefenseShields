@@ -252,12 +252,23 @@ namespace DefenseShields
 
                 _sizeScaler = (float) (Session.Enforced.SizeScaler > 1 ? (Math.Round(rawScaler / adjustment) * adjustment) : rawScaler);
 
-                var volumeModifier = (float)(Math.Sqrt(Math.Log10(_sizeScaler * (DsState.State.GridHalfExtents.Volume))) - 1);
-                if (DsState.State.CapModifier >= 1 && volumeModifier >= 1)
-                    _sizeScaler /= volumeModifier;
+                ///
+                /// Large ship bonus
+                /// 
+                var size = (ShieldSize).Volume;
+                var scaleMod = size * (size * 0.00000005d);
+                var scaleSqrt = Math.Sqrt(scaleMod) - 1d;
+                var safeSqrt = scaleSqrt <= 0 ? 0.1d : scaleSqrt;
+                var volumeModifier = Math.Log10(safeSqrt);
                 
-                //Log.Line($"{MyGrid.DebugName} - surface: {_ellipsoidSurfaceArea} - magic:{ellipsoidMagic} - raw:{rawScaler} - final:{_sizeScaler} - Volume:{Math.Sqrt(Math.Log10(_sizeScaler * (ShieldSize.Volume))) - 1}]");
+                //Log.Line($"{MyGrid.DebugName} - surface: {_ellipsoidSurfaceArea} - magic:{ellipsoidMagic} - raw:{rawScaler} - final:{_sizeScaler} - Volume:{Math.Sqrt(Math.Log10(_sizeScaler * (ShieldSize.Volume))) - 1}] - {volumeModifier}");
 
+                if (DsState.State.CapModifier >= 1 && volumeModifier >= 1)
+                    _sizeScaler /= (float)volumeModifier;
+                ///
+                ///
+                /// 
+                
                 if (_isServer) {
                     ShieldChangeState();
                     ShieldComp.ShieldVolume = DetectMatrixOutside.Scale.Volume;

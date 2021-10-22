@@ -68,6 +68,10 @@
         [ProtoMember(32)] public long ActiveEmitterId;
         [ProtoMember(33)] public uint MId;
         [ProtoMember(34)] public int MessageCount;
+        [ProtoMember(35)] public float BlockDensity;
+        [ProtoMember(36)] public float PowerDensity;
+        [ProtoMember(37)] public Vector3 RealGridHalfExtents;
+
     }
 
     [ProtoContract]

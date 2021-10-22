@@ -236,8 +236,8 @@
                                          "\n[Maintenance]: " + _shieldMaintaintPower.ToString("0.0") + " Mw" +
                                          "\n[Shield Power]: " + ShieldCurrentPower.ToString("0.0") + " Mw" +
                                          "\n[Power Use]: " + powerUsage.ToString("0.0") + " (" + GridMaxPower.ToString("0.0") + ")Mw" +
-                                         "\n[Power Density]: " + _powerCapMulti +
-                                         "\n[Block Density]: " + _blockCapMulti +
+                                         "\n[Power Density]: " + DsState.State.PowerDensity +
+                                         "\n[Block Density]: " + DsState.State.BlockDensity +
                                          "\n[Density Total]: " + DsState.State.CapModifier);
                 }
                 else {

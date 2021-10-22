@@ -585,13 +585,13 @@ namespace DefenseShields
 
             var blockResult = (float)(size / maxSize);
             var blockCapLimit = MathHelper.Clamp(BlockDensityLimit / Session.Enforced.BlockScaler, 0.000001f, 1);
-            _blockCapMulti = blockResult / blockCapLimit;
-            var blockCapMultiClamp = MathHelper.Clamp(_blockCapMulti, 0.001f, 1);
+            DsState.State.BlockDensity = blockResult / blockCapLimit;
+            var blockCapMultiClamp = MathHelper.Clamp(DsState.State.BlockDensity, 0.001f, 1);
 
             var powerResult = (float)(powerCount / size);
             var powerCapLimit = MathHelper.Clamp(PowerDensityLimit * Session.Enforced.PowerScaler, 0.000001f, 1);
-            _powerCapMulti = powerCapLimit / powerResult;
-            var powerCapMultiClamp = MathHelper.Clamp(_powerCapMulti, 0.001f, 1);
+            DsState.State.PowerDensity = powerCapLimit / powerResult;
+            var powerCapMultiClamp = MathHelper.Clamp(DsState.State.PowerDensity, 0.001f, 1);
 
             DsState.State.CapModifier = MathHelper.Clamp(powerCapMultiClamp * blockCapMultiClamp, 0.000001f, 1);
             _updateMobileShape = true;

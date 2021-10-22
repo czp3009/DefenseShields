@@ -99,6 +99,7 @@ namespace DefenseShields
                 _delayedCapTick = _tick + 600;
 
             ConstructAaab = expandedAabb;
+            DsState.State.RealGridHalfExtents = expandedAabb.HalfExtents;
             if (DsSet.Settings.SphereFit || DsSet.Settings.FortifyShield)
             {
                 var fortify = DsSet.Settings.FortifyShield ? 3 : 1;
@@ -255,15 +256,21 @@ namespace DefenseShields
                 ///
                 /// Large ship bonus
                 /// 
-                var size = (ShieldSize).Volume;
+                /*
+                var size = ShieldSize.Volume;
                 var scaleMod = size * (size * 0.00000005d);
                 var scaleSqrt = Math.Sqrt(scaleMod) - 1d;
                 var safeSqrt = scaleSqrt <= 0 ? 0.1d : scaleSqrt;
                 var volumeModifier = Math.Log10(safeSqrt);
-                
-                //Log.Line($"{MyGrid.DebugName} - surface: {_ellipsoidSurfaceArea} - magic:{ellipsoidMagic} - raw:{rawScaler} - final:{_sizeScaler} - Volume:{Math.Sqrt(Math.Log10(_sizeScaler * (ShieldSize.Volume))) - 1}] - {volumeModifier}");
+                */
+                var size = DsState.State.RealGridHalfExtents.Volume * 2;
+                var scaleMod = size * (size * 0.00000012d);
+                var scaleSqrt = Math.Sqrt(scaleMod) - 1d;
+                var safeSqrt = scaleSqrt <= 0 ? 0.1d : scaleSqrt;
+                var volumeModifier = Math.Log10(safeSqrt);
+                //Log.CleanLine($"{MyGrid.DebugName} - current:{volumeModifier}  - future:{volumeModifier2} - ShieldVol:{ShieldSize.Volume} - GridVol:{DsState.State.RealGridHalfExtents.Volume * 2}");
 
-                if (DsState.State.CapModifier >= 1 && volumeModifier >= 1)
+                if (ShieldMode != ShieldType.Station && DsState.State.BlockDensity >= 1 && volumeModifier >= 1)
                     _sizeScaler /= (float)volumeModifier;
                 ///
                 ///

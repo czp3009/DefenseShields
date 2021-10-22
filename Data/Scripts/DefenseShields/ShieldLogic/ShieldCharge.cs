@@ -1,9 +1,6 @@
 ﻿using VRageMath;
 using System;
-using System.Diagnostics.Eventing.Reader;
-using DefenseShields.Support;
 using Sandbox.Game.Entities;
-using Sandbox.ModAPI;
 using VRage;
 using VRage.Collections;
 using VRage.Utils;
@@ -292,8 +289,14 @@ namespace DefenseShields
             var reserveScaler = ReserveScaler[powerScale];
             var userPowerCap = DsSet.Settings.PowerWatts * reserveScaler;
             var shieldMax = GridMaxPower > userPowerCap && reserveScaler > 0 ? userPowerCap : GridMaxPower;
-            ShieldMaxPower = shieldMax;
-            ShieldAvailablePower = ShieldMaxPower - GridCurrentPower;
+            
+            if (shieldMax >= ShieldMaxPower  || shieldMax <= 0 || _maxPowerTick++ > 100)
+            {
+                _maxPowerTick = 0;
+                ShieldMaxPower = shieldMax;
+            }
+
+            ShieldAvailablePower = shieldMax - GridCurrentPower;
 
             _shieldPowered = ShieldMaxPower > 0;
         }

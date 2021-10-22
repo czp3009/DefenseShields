@@ -149,6 +149,7 @@ namespace DefenseShields
         private uint _lastSendDamageTick = uint.MaxValue;
         private uint _subUpdatedTick = uint.MaxValue;
         private uint _lastDamageTick;
+        private uint _maxPowerTick;
         private float _power = 0.001f;
         private float _powerNeeded;
         private float _otherPower;
@@ -168,9 +169,6 @@ namespace DefenseShields
         private float _sizeScaler;
         private float _shieldTypeRatio = 100f;
         private float _damageTypeBalance;
-        private float _blockCapMulti;
-        private float _powerCapMulti;
-
         private double _oldEllipsoidAdjust;
         private double _ellipsoidSurfaceArea;
 

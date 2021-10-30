@@ -221,7 +221,7 @@ namespace DefenseShields
                         _slavedToGrid = ds.MyGrid;
                         if (_slavedToGrid != null)
                         {
-                            if (_isServer && !ds.IsStatic && !DsState.State.Lowered && DsState.State.Charge > 0)
+                            if (_isServer && !IsStatic && !ds.IsStatic && DsState.State.Charge > 0)
                                 DsState.State.Charge = 0;
                             return true;
                         }

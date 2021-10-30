@@ -253,27 +253,15 @@ namespace DefenseShields
 
                 _sizeScaler = (float) (Session.Enforced.SizeScaler > 1 ? (Math.Round(rawScaler / adjustment) * adjustment) : rawScaler);
 
-                ///
                 /// Large ship bonus
-                /// 
-                /*
-                var size = ShieldSize.Volume;
-                var scaleMod = size * (size * 0.00000005d);
-                var scaleSqrt = Math.Sqrt(scaleMod) - 1d;
-                var safeSqrt = scaleSqrt <= 0 ? 0.1d : scaleSqrt;
-                var volumeModifier = Math.Log10(safeSqrt);
-                */
                 var size = DsState.State.RealGridHalfExtents.Volume * 2;
                 var scaleMod = size * (size * 0.00000012d);
                 var scaleSqrt = Math.Sqrt(scaleMod) - 1d;
                 var safeSqrt = scaleSqrt <= 0 ? 0.1d : scaleSqrt;
                 var volumeModifier = Math.Log10(safeSqrt);
-                //Log.CleanLine($"{MyGrid.DebugName} - current:{volumeModifier}  - future:{volumeModifier2} - ShieldVol:{ShieldSize.Volume} - GridVol:{DsState.State.RealGridHalfExtents.Volume * 2}");
 
                 if (ShieldMode != ShieldType.Station && DsState.State.BlockDensity >= 1 && volumeModifier >= 1)
                     _sizeScaler /= (float)volumeModifier;
-                ///
-                ///
                 /// 
                 
                 if (_isServer) {

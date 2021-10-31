@@ -743,7 +743,7 @@ namespace DefenseShields
                     if (firstOrLast)
                     {
                         var relationship = MyIDModule.GetRelationPlayerBlock(requesterId, s.MyCube.OwnerId);
-                        var enemy = relationship != MyRelationsBetweenPlayerAndBlock.Owner && relationship != MyRelationsBetweenPlayerAndBlock.FactionShare;
+                        var enemy = relationship != MyRelationsBetweenPlayerAndBlock.Owner && relationship != MyRelationsBetweenPlayerAndBlock.FactionShare && relationship != MyRelationsBetweenPlayerAndBlock.Friends;
                         notEnemyCheck = !enemy;
                     }
 

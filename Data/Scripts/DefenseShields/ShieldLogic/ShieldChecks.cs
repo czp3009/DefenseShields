@@ -211,7 +211,7 @@ namespace DefenseShields
             {
                 if (grid == MyGrid) continue;
                 ShieldGridComponent shieldComponent;
-                if (grid.Components.TryGet(out shieldComponent) && shieldComponent?.DefenseShields != null && shieldComponent.DefenseShields.DsState.State.Online && shieldComponent.DefenseShields.MyCube.IsWorking) {
+                if (grid.Components.TryGet(out shieldComponent) && shieldComponent?.DefenseShields != null && shieldComponent.DefenseShields.MyCube.IsWorking) {
 
                     var ds = shieldComponent.DefenseShields;
                     var otherSize = ds.MyGrid.PositionComp.LocalAABB.Size.Volume;

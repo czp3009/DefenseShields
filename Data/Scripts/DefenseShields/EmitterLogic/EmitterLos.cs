@@ -68,7 +68,7 @@ namespace DefenseShields
 
         private void UpdateLosState(bool updateTestSphere = true)
         {
-            if (_age < 1800)
+            if (!_isDedicated && _age < 1800)
                 return;
 
             _blocksLos.Clear();

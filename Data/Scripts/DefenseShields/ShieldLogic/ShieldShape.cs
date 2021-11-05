@@ -241,7 +241,7 @@ namespace DefenseShields
                 _ellipsoidSa.Update(DetectMatrixOutside.Scale.X, DetectMatrixOutside.Scale.Y, DetectMatrixOutside.Scale.Z);
                 BoundingRange = ShieldSize.AbsMax();
                 ShieldSphere3K.Radius = BoundingRange + 3000;
-                WebSphere.Radius = BoundingRange + 7;
+                WebSphere.Radius = BoundingRange + 5;
 
                 _ellipsoidSurfaceArea = _ellipsoidSa.Surface;
                 EllipsoidVolume = 1.333333 * Math.PI * DetectMatrixOutside.Scale.X * DetectMatrixOutside.Scale.Y * DetectMatrixOutside.Scale.Z;

@@ -148,7 +148,7 @@
 
             var bOriBBoxD = MyOrientedBoundingBoxD.CreateFromBoundingBox(grid.PositionComp.WorldAABB);
             if (entInfo.Relation != Ent.EnemyGrid && entInfo.WasInside && EntInside(grid, bOriBBoxD)) return;
-            BlockIntersect(grid, bOriBBoxD, ref entInfo);
+            BlockIntersect(grid, ref bOriBBoxD, ref entInfo);
         }
 
         private void ShieldIntersect(MyEntity ent)
@@ -275,7 +275,7 @@
             }
         }
 
-        private void BlockIntersect(MyCubeGrid breaching, MyOrientedBoundingBoxD bOriBBoxD, ref EntIntersectInfo entInfo)
+        private void BlockIntersect(MyCubeGrid breaching, ref MyOrientedBoundingBoxD bOriBBoxD, ref EntIntersectInfo entInfo)
         {
             try
             {
@@ -301,7 +301,7 @@
                     var gc = breaching.WorldToGridInteger(DetectionCenter);
                     var rc = ShieldSize.AbsMax() / blockSize;
                     rc *= rc;
-                    rc = rc + 1;
+                    rc += 1;
                     rc = Math.Ceiling(rc);
                     var hits = 0;
                     var blockPoints = new Vector3D[9];
@@ -331,7 +331,8 @@
                         }
 
                         var block = accel.Block;
-                        var point = CustomCollision.BlockIntersect(block, accel.CubeExists, bQuaternion, DetectMatrixOutside, DetectMatrixOutsideInv, ref blockPoints);
+                        var sMat = DetectMatrixOutside;
+                        var point = CustomCollision.BlockIntersect(block, accel.CubeExists, ref bQuaternion, ref sMat, ref DetectMatrixOutsideInv, ref blockPoints);
                         if (point == null) continue;
                         collisionAvg += (Vector3D)point;
                         hits++;
@@ -568,7 +569,6 @@
             if (grid != null)
             {
                 var checkSphere = WebSphere;
-                checkSphere.Radius += 10;
                 GetBlocksInsideSphereFast(grid, ref checkSphere, true, entInfo.CacheBlockList);
             }
         }

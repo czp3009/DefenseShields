@@ -900,7 +900,9 @@ namespace DefenseShields
             {
                 if (Vector3D.DistanceSquared(s.DetectionCenter, pos) > Session.Instance.SyncDistSqr) continue;
 
-                var sDist = CustomCollision.EllipsoidDistanceToPos(s.DetectMatrixOutsideInv, s.DetectMatrixOutside, pos);
+                var sInv = s.DetectMatrixOutsideInv;
+                var sMat = s.DetectMatrixOutside;
+                var sDist = CustomCollision.EllipsoidDistanceToPos(ref sInv, ref sMat, ref pos);
                 if (sDist > 0 && sDist < closestDist)
                 {
                     cloestSBlock = s.MyCube;
@@ -920,7 +922,9 @@ namespace DefenseShields
             var logic = block?.GameLogic?.GetAs<DefenseShields>()?.ShieldComp?.DefenseShields;
             if (logic == null) return -1;
 
-            return CustomCollision.EllipsoidDistanceToPos(logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, pos);
+            var sInv = logic.DetectMatrixOutsideInv;
+            var sMat = logic.DetectMatrixOutside;
+            return CustomCollision.EllipsoidDistanceToPos(ref sInv, ref sMat, ref pos);
         }
 
         private static Vector3D? TAPI_GetClosestShieldPoint(IMyTerminalBlock block, Vector3D pos)

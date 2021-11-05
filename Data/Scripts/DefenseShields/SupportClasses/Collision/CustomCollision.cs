@@ -159,13 +159,14 @@ namespace DefenseShields.Support
             return closestWPos;
         }
 
-        public static double EllipsoidDistanceToPos(MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, Vector3D point)
+        public static double EllipsoidDistanceToPos(ref MatrixD ellipsoidMatrixInv, ref MatrixD ellipsoidMatrix, ref Vector3D point)
         {
-            var ePos = Vector3D.Transform(point, ellipsoidMatrixInv);
-            var closestLPos = Vector3D.Normalize(ePos);
-            var closestWPos = Vector3D.Transform(closestLPos, ellipsoidMatrix);
-
-            var distToPoint = Vector3D.Distance(closestWPos, point);
+            var ePos = Vector3D.Transform(point, ref ellipsoidMatrixInv);
+            Vector3D closestLPos;
+            Vector3D.Normalize(ref ePos, out closestLPos);
+            var closestWPos = Vector3D.Transform(closestLPos, ref ellipsoidMatrix);
+            double distToPoint;
+            Vector3D.Distance(ref closestWPos, ref point, out distToPoint);
             if (ePos.LengthSquared() < 1) distToPoint *= -1;
 
             return distToPoint;
@@ -389,7 +390,7 @@ namespace DefenseShields.Support
             return null;
         }
 
-        public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, Quaternion bQuaternion, MatrixD matrix, MatrixD matrixInv, ref Vector3D[] blockPoints, bool debug = false)
+        public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref Quaternion bQuaternion, ref MatrixD matrix, ref MatrixD matrixInv, ref Vector3D[] blockPoints, bool debug = false)
         {
             BoundingBoxD blockBox;
             Vector3D center;
@@ -405,7 +406,15 @@ namespace DefenseShields.Support
                 blockBox = new BoundingBoxD(-halfExt, halfExt);
                 block.ComputeWorldCenter(out center);
             }
-            
+            double distSqr;
+            Vector3D.DistanceSquared(ref blockBox.Min, ref blockBox.Max, out distSqr);
+            var radiusSqr = distSqr * 0.5f;
+           
+            var distFromEllips = EllipsoidDistanceToPos(ref matrixInv, ref matrix, ref center);
+            if (distFromEllips * distFromEllips > radiusSqr)
+            {
+                return null;
+            }
             // 4 + 5 + 6 + 7 = Front
             // 0 + 1 + 2 + 3 = Back
             // 1 + 2 + 5 + 6 = Top

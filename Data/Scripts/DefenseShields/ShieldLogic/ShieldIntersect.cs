@@ -23,15 +23,12 @@
             var tick = Session.Instance.Tick;
             var entCenter = webent.PositionComp.WorldVolume.Center;
             if (entInfo.LastTick != tick) return;
-            if (entInfo.RefreshNow && (relation == Ent.NobodyGrid || relation == Ent.EnemyGrid))
+            if (entInfo.RefreshNow)
             {
                 entInfo.CacheBlockList.Clear();
-                var grid = webent as MyCubeGrid;
-                if (grid != null)
+                if (relation == Ent.NobodyGrid || relation == Ent.EnemyGrid)
                 {
-                    var checkSphere = WebSphere;
-                    checkSphere.Radius += 10;
-                    GetBlocksInsideSphereFast(grid, ref checkSphere, true, entInfo.CacheBlockList);
+                    RefreshBlockCache(webent, entInfo);
                 }
             }
             entInfo.RefreshNow = false;
@@ -181,7 +178,11 @@
             for (int i = 0; i < numOfPointsInside; i++) collisionAvg += insidePoints[i];
 
             if (numOfPointsInside > 0) collisionAvg /= numOfPointsInside;
-            if (collisionAvg == Vector3D.Zero) return;
+            if (collisionAvg == Vector3D.Zero)
+            {
+                GridIntersect(ent);
+                return;
+            }
 
             if (MyGrid.EntityId > grid.EntityId) ComputeCollisionPhysics(grid, MyGrid, collisionAvg);
             else if (!_isServer) return;
@@ -282,6 +283,12 @@
 
                 if (bOriBBoxD.Intersects(ref SOriBBoxD))
                 {
+                    if (entInfo.Relation == Ent.Shielded &&  _tick - entInfo.RefreshTick == 0)
+                    {
+                        entInfo.CacheBlockList.Clear();
+                        RefreshBlockCache(breaching, entInfo);
+                    }
+
                     var collisionAvg = Vector3D.Zero;
                     var damageBlocks = Session.Enforced.DisableBlockDamage == 0;
                     var bQuaternion = Quaternion.CreateFromRotationMatrix(breaching.WorldMatrix);
@@ -553,6 +560,17 @@
             var collisionEvent = Session.Instance.VoxelCollisionPhysicsPool.Get();
             collisionEvent.Init(collisionData, this);
             Session.Instance.ThreadEvents.Enqueue(collisionEvent);
+        }
+
+        private void RefreshBlockCache(MyEntity entity, EntIntersectInfo entInfo)
+        {
+            var grid = entity as MyCubeGrid;
+            if (grid != null)
+            {
+                var checkSphere = WebSphere;
+                checkSphere.Radius += 10;
+                GetBlocksInsideSphereFast(grid, ref checkSphere, true, entInfo.CacheBlockList);
+            }
         }
         #endregion
     }

@@ -440,7 +440,7 @@ namespace DefenseShields
 
                 ShieldGridComponent shieldComponent;
                 grid.Components.TryGet(out shieldComponent);
-                if (shieldComponent?.DefenseShields?.ShieldComp != null && shieldComponent.DefenseShields.NotFailed)
+                if (shieldComponent?.DefenseShields?.ShieldComp != null && shieldComponent.DefenseShields.NotFailed && shieldComponent.DefenseShields.DsState != null && !shieldComponent.DefenseShields.DsState.State.ReInforce)
                 {
                     var dsComp = shieldComponent.DefenseShields;
                     var shieldEntity = MyCube.Parent;

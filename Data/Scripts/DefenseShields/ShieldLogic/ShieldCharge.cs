@@ -88,7 +88,7 @@ namespace DefenseShields
             if (ShieldMode == ShieldType.Station && DsState.State.Enhancer)
                 hpsEfficiency *= 3.5f;
             else if (fortify)
-                hpsEfficiency *= 2f;
+                hpsEfficiency *= 2.5f;
 
             var bufferMaxScaler = (baseScaler * shieldTypeRatio) / _sizeScaler;
 

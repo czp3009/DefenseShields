@@ -40,10 +40,10 @@ namespace DefenseShields
         internal readonly MyStringHash MPEMP = MyStringHash.GetOrCompute("MPEMP");
         internal readonly MyStringHash MpIgnoreDamage = MyStringHash.GetOrCompute("MpIgnoreDamage");
         internal readonly MyStringHash Bypass = MyStringHash.GetOrCompute("bypass");
-        internal readonly MyStringId Password = MyStringId.GetOrCompute("Shield Access Frequency");
-        internal readonly MyStringId PasswordTooltip = MyStringId.GetOrCompute("Match a shield's modulation frequency/code");
-        internal readonly MyStringId ShieldFreq = MyStringId.GetOrCompute("Shield Frequency");
-        internal readonly MyStringId ShieldFreqTooltip = MyStringId.GetOrCompute("Set this to the secret frequency/code used for shield access");
+        internal MyStringId Password;
+        internal MyStringId PasswordTooltip;
+        internal MyStringId ShieldFreq;
+        internal MyStringId ShieldFreqTooltip;
 
         internal readonly Guid O2GeneratorSettingsGuid = new Guid("85BBB4F5-4FB9-4230-BEEF-BB79C9811502");
         internal readonly Guid EnhancerStateGuid = new Guid("85BBB4F5-4FB9-4230-BEEF-BB79C9811503");

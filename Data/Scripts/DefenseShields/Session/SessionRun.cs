@@ -6,6 +6,7 @@
     using Sandbox.Game.Entities;
     using Sandbox.ModAPI;
     using VRage.Game.Components;
+    using VRage.Utils;
     using VRageMath;
     using MyVisualScriptLogicProvider = Sandbox.Game.MyVisualScriptLogicProvider;
 
@@ -39,6 +40,10 @@
                 MyVisualScriptLogicProvider.PlayerRespawnRequest += PlayerConnected;
                 if (!DedicatedServer)
                 {
+                    Password = MyStringId.GetOrCompute(Localization.GetText("TerminalPasswordTitle"));
+                    PasswordTooltip = MyStringId.GetOrCompute(Localization.GetText("TerminalPasswordTooltip"));
+                    ShieldFreq = MyStringId.GetOrCompute(Localization.GetText("TerminalShieldFreqTitle"));
+                    ShieldFreqTooltip = MyStringId.GetOrCompute(Localization.GetText("TerminalShieldFreqTooltip"));
                     MyAPIGateway.TerminalControls.CustomControlGetter += CustomControls;
                 }
 

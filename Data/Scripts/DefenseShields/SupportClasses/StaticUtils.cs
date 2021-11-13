@@ -34,7 +34,7 @@ namespace DefenseShields.Support
             const int DisableEntityBarrier = 0;
             const int Debug = 1;
             const int SuperWeapons = 1;
-            const int Version = 85;
+            const int Version = 86;
             const float BlockScaler = 1f;
             const float PowerScaler = 1f;
             const float SizeScaler = 7.5f;
@@ -42,7 +42,7 @@ namespace DefenseShields.Support
             const float HpsEfficiency = 0.25f;
             const float MaintenanceCost = 0.5f;
             const int DisableBlockDamage = 0;
-            const int DisableLineOfSight = 0;
+            const int DisableLineOfSight = 1;
             const int OverloadTime = 2700;
 
             var dsCfgExists = MyAPIGateway.Utilities.FileExistsInGlobalStorage("DefenseShields.cfg");
@@ -83,6 +83,12 @@ namespace DefenseShields.Support
                 Session.Enforced.DisableBlockDamage = !unPackedData.DisableBlockDamage.Equals(-1) ? unPackedData.DisableBlockDamage : DisableBlockDamage;
                 Session.Enforced.DisableLineOfSight = !unPackedData.DisableLineOfSight.Equals(-1) ? unPackedData.DisableLineOfSight : DisableLineOfSight;
                 Session.Enforced.OverloadTime = !unPackedData.OverloadTime.Equals(-1) ? unPackedData.OverloadTime : OverloadTime;
+
+                if (unPackedData.Version <= 85 )
+                {
+                    Session.Enforced.DisableLineOfSight = 1;
+                }
+
                 if (unPackedData.Version <= 84 || Session.Enforced.MwPerCell <= 0)
                 {
                     Session.Enforced.MwPerCell = 22.5f;

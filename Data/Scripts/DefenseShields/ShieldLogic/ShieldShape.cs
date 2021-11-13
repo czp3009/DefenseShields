@@ -108,6 +108,11 @@ namespace DefenseShields
                 if (shieldGrid.GridSizeEnum == MyCubeSize.Small && DsSet.Settings.Fit < 15) scaler = 5;
 
                 var size = (expandedAabb.HalfExtents.Max() * fortify) * fit;
+                
+                if (size < expandedAabb.HalfExtents.Max())
+                    size = expandedAabb.HalfExtents.Max();
+
+
                 var vectorSize = new Vector3D(size, size, size);
 
                 var fudge = shieldGrid.GridSize * scaler;
@@ -241,11 +246,11 @@ namespace DefenseShields
                 _ellipsoidSa.Update(DetectMatrixOutside.Scale.X, DetectMatrixOutside.Scale.Y, DetectMatrixOutside.Scale.Z);
                 BoundingRange = ShieldSize.AbsMax();
                 ShieldSphere3K.Radius = BoundingRange + 3000;
-                WebSphere.Radius = BoundingRange + 5;
+                WebSphere.Radius = BoundingRange + (IsStatic ? 100 : 10);
 
                 _ellipsoidSurfaceArea = _ellipsoidSa.Surface;
                 EllipsoidVolume = 1.333333 * Math.PI * DetectMatrixOutside.Scale.X * DetectMatrixOutside.Scale.Y * DetectMatrixOutside.Scale.Z;
-                var magicMod = DsState.State.Enhancer && ShieldMode == ShieldType.Station ? 100f : DsState.State.Enhancer && DsSet.Settings.FortifyShield ? 10f + Math.Sqrt(DsSet.Settings.Fit) : 1f;
+                var magicMod = DsState.State.Enhancer && ShieldMode == ShieldType.Station ? 100f : DsState.State.Enhancer && DsSet.Settings.FortifyShield ? 18f + Math.Sqrt(DsSet.Settings.Fit) : 1f;
                 var ellipsoidMagic = _ellipsoidSurfaceArea / (MagicEllipsoidRatio * magicMod);
                 var rawScaler = Math.Sqrt(ellipsoidMagic);
 

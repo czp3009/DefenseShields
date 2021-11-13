@@ -167,58 +167,57 @@
       <IsFlareOccluder>false</IsFlareOccluder>
     </TransparentMaterial>
 
-    <TransparentMaterial> <!-- ModelHighReflective -->
+    <TransparentMaterial> <!-- Overwrites Cyan Shield -->
       <Id>
-          <TypeId>TransparentMaterialDefinition</TypeId>
-          <SubtypeId>ShieldPassiveGlass</SubtypeId>
-      </Id>      
+        <TypeId>TransparentMaterialDefinition</TypeId>
+        <SubtypeId>ShieldPassiveGlass</SubtypeId>
+      </Id>
       <AlphaMistingEnable>false</AlphaMistingEnable>
       <AlphaSaturation>1</AlphaSaturation>
       <CanBeAffectedByOtherLights>true</CanBeAffectedByOtherLights>
       <IgnoreDepth>false</IgnoreDepth>
-      <SoftParticleDistanceScale>1</SoftParticleDistanceScale>
+      <SoftParticleDistanceScale>100</SoftParticleDistanceScale>
       <Texture>Textures\Particles\SquareWindowDirtInside_ca.dds</Texture>
       <GlossTexture>Textures\Models\Cubes\AluminiumGlossy_ng.dds</GlossTexture>
       <UseAtlas>false</UseAtlas>
       <NeedSort>true</NeedSort>
       <UVOffset>
-          <X>0</X>
-          <Y>0</Y>
+        <X>0</X>
+        <Y>0</Y>
       </UVOffset>
       <UVSize>
-          <X>1</X>
-          <Y>1</Y>
+        <X>1</X>
+        <Y>1</Y>
       </UVSize>
-      <Color>   
-          <X>0</X>
-          <Y>0</Y>
-          <Z>0</Z>
-          <W>0</W>
+      <Color>
+        <X>0</X>
+        <Y>5</Y>
+        <Z>5</Z>
+        <W>0.1</W>
       </Color>
       <ColorAdd>
-        <X>0.00</X>
-        <Y>0.005</Y>
-        <Z>0.02</Z>
-        <W>0.1</W>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>0</Z>
+        <W>0</W>
       </ColorAdd>
       <ShadowMultiplier>
-          <X>0</X>
-          <Y>0</Y>
-          <Z>0</Z>
-          <W>0</W>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>0</Z>
+        <W>0</W>
       </ShadowMultiplier>
-      <!--AmbientMultiplier-->
       <LightMultiplier>
-          <X>0</X>
-          <Y>0</Y>
-          <Z>0</Z>
-          <W>0</W>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>0</Z>
+        <W>0</W>
       </LightMultiplier>
-      <Reflectivity>0.8</Reflectivity>
-      <Fresnel>99</Fresnel>
+      <Reflectivity>0.1</Reflectivity>
+      <Fresnel>1</Fresnel>
       <ReflectionShadow>1</ReflectionShadow>
-      <Gloss>0.8</Gloss>
-      <GlossTextureAdd>0.8</GlossTextureAdd>
+      <Gloss>0.1</Gloss>
+      <GlossTextureAdd>0.1</GlossTextureAdd>
       <SpecularColorFactor>255</SpecularColorFactor>
       <IsFlareOccluder>false</IsFlareOccluder>
     </TransparentMaterial>
@@ -3531,5 +3530,64 @@
     <Y>1</Y>
   </UVSize>
 </TransparentMaterial>
+<!-- Combat Zone Shield Material, unique name to avoid conflicts -->
+    <TransparentMaterial>
+      <Id>
+        <TypeId>TransparentMaterialDefinition</TypeId>
+        <SubtypeId>ParticleShieldTexture</SubtypeId>
+      </Id>
+      <AlphaMistingEnable>false</AlphaMistingEnable>
+      <AlphaSaturation>1</AlphaSaturation>
+      <CanBeAffectedByOtherLights>false</CanBeAffectedByOtherLights>
+      <IgnoreDepth>false</IgnoreDepth>
+      <SoftParticleDistanceScale>1</SoftParticleDistanceScale>
+      <Texture>Textures\Models\CombatZoneField_cm.dds</Texture>
+      <GlossTexture>Textures\Models\CombatZoneField_ng.dds</GlossTexture>
+      <UseAtlas>false</UseAtlas>
+      <NeedSort>true</NeedSort>
+      <UVOffset>
+        <X>0</X>
+        <Y>0</Y>
+      </UVOffset>
+      <UVSize>
+        <X>0.25</X>
+        <Y>0.25</Y>
+      </UVSize>
+      <Color>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>0</Z>
+        <W>0</W>
+      </Color>
+      <ColorAdd>
+        <X>0.0</X>
+        <Y>0.0</Y>
+        <Z>0.0</Z>
+        <W>0.1</W>
+      </ColorAdd>
+      <ShadowMultiplier>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>0</Z>
+        <W>0</W>
+      </ShadowMultiplier>
+      <LightMultiplier>
+        <X>0</X>
+        <Y>0</Y>
+        <Z>0</Z>
+        <W>0</W>
+      </LightMultiplier>
+      <Reflectivity>0</Reflectivity>
+      <Fresnel>0</Fresnel>
+      <ReflectionShadow>1</ReflectionShadow>
+      <Gloss>0</Gloss>
+      <GlossTextureAdd>0</GlossTextureAdd>
+      <SpecularColorFactor>255</SpecularColorFactor>
+      <IsFlareOccluder>false</IsFlareOccluder>
+    </TransparentMaterial>
+
+
+
+
 </TransparentMaterials>
 </Definitions>

@@ -54,7 +54,7 @@ namespace DefenseShields
                 }
 
                 Fit = TerminalHelpers.AddSlider(comp?.Shield, "DS-CFit", Localization.GetText("TerminalFitTitle"), Localization.GetText("TerminalFitTooltip"), DsUi.GetFit, DsUi.SetFit);
-                Fit.SetLimits(0, 29);
+                Fit.SetLimits(0, 25);
 
                 SphereFit = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_SphereFit", Localization.GetText("TerminalSphereFitTitle"), Localization.GetText("TerminalSphereFitTooltip"), DsUi.GetSphereFit, DsUi.SetSphereFit);
                 FortifyShield = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_ShieldFortify", Localization.GetText("TerminalFortifyShieldTitle"), Localization.GetText("TerminalFortifyShieldTooltip"), DsUi.GetFortify, DsUi.SetFortify);

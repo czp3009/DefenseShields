@@ -569,6 +569,7 @@
             if (grid != null)
             {
                 var checkSphere = WebSphere;
+                checkSphere.Radius += 10;
                 GetBlocksInsideSphereFast(grid, ref checkSphere, true, entInfo.CacheBlockList);
             }
         }

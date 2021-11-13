@@ -327,6 +327,9 @@ namespace DefenseShields
                 UpdateSettings(DsSet.Settings);
                 if (isServer)
                 {
+                    if (DsSet.Settings.Fit > 25)
+                        DsSet.Settings.Fit = 25;
+
                     DsState.State.Overload = false;
                     DsState.State.NoPower = false;
                     DsState.State.Remodulate = false;

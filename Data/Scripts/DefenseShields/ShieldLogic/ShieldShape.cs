@@ -102,7 +102,7 @@ namespace DefenseShields
             DsState.State.RealGridHalfExtents = expandedAabb.HalfExtents;
             if (DsSet.Settings.SphereFit || DsSet.Settings.FortifyShield)
             {
-                var fortify = DsSet.Settings.FortifyShield ? 3 : 1;
+                var fortify = DsSet.Settings.FortifyShield ? 2 : 1;
                 var fit = (float)UtilsStatic.GetFit(DsSet.Settings.Fit) * 0.5f;
                 var scaler = 4f;
                 if (shieldGrid.GridSizeEnum == MyCubeSize.Small && DsSet.Settings.Fit < 15) scaler = 5;
@@ -250,7 +250,7 @@ namespace DefenseShields
 
                 _ellipsoidSurfaceArea = _ellipsoidSa.Surface;
                 EllipsoidVolume = 1.333333 * Math.PI * DetectMatrixOutside.Scale.X * DetectMatrixOutside.Scale.Y * DetectMatrixOutside.Scale.Z;
-                var magicMod = DsState.State.Enhancer && ShieldMode == ShieldType.Station ? 100f : DsState.State.Enhancer && DsSet.Settings.FortifyShield ? 20f + Math.Sqrt(DsSet.Settings.Fit) : 1f;
+                var magicMod = DsState.State.Enhancer && ShieldMode == ShieldType.Station ? 100f : DsState.State.Enhancer && DsSet.Settings.FortifyShield ? 12f + Math.Sqrt(DsSet.Settings.Fit) : 1f;
                 var ellipsoidMagic = _ellipsoidSurfaceArea / (MagicEllipsoidRatio * magicMod);
                 var rawScaler = Math.Sqrt(ellipsoidMagic);
 

@@ -95,38 +95,38 @@ namespace DefenseShields
                 var mode = Enum.GetName(typeof(EmitterType), EmiState.State.Mode);
                 if (!EmiState.State.Link)
                 {
-                    stringBuilder.Append("[ No Valid Controller ]" +
+                    stringBuilder.Append(Localization.GetText("InfoEmitter[ No Valid Controller ]") +
                                          "\n" +
-                                         "\n[Emitter Type]: " + mode +
-                                         "\n[Grid Compatible]: " + EmiState.State.Compatible +
-                                         "\n[Controller Link]: " + EmiState.State.Link +
-                                         "\n[Controller Bus]: " + (ShieldComp?.DefenseShields != null) +
-                                         "\n[Line of Sight]: " + EmiState.State.Los +
-                                         "\n[Is Suspended]: " + EmiState.State.Suspend +
-                                         "\n[Is a Backup]: " + EmiState.State.Backup);
+                                         $"\n{Localization.GetText("InfoEmitter[Emitter Type]")}: " + mode +
+                                         $"\n{Localization.GetText("InfoEmitter[Grid Compatible]")}: " + EmiState.State.Compatible +
+                                         $"\n{Localization.GetText("InfoEmitter[Controller Link]")}: " + EmiState.State.Link +
+                                         $"\n{Localization.GetText("InfoEmitter[Controller Bus]")}: " + (ShieldComp?.DefenseShields != null) +
+                                         $"\n{Localization.GetText("InfoEmitter[Line of Sight]")}: " + EmiState.State.Los +
+                                         $"\n{Localization.GetText("InfoEmitter[Is Suspended]")}: " + EmiState.State.Suspend +
+                                         $"\n{Localization.GetText("InfoEmitter[Is a Backup]")}: " + EmiState.State.Backup);
                 }
                 //else if (!EmiState.State.Online)
                 else if (EmiState.State.ActiveEmitterId == 0)
                 {
-                    stringBuilder.Append("[ Emitter Offline ]" +
+                    stringBuilder.Append(Localization.GetText("InfoEmitter[ Emitter Offline ]") +
                                          "\n" +
-                                         "\n[Emitter Type]: " + mode +
-                                         "\n[Grid Compatible]: " + EmiState.State.Compatible +
-                                         "\n[Controller Link]: " + EmiState.State.Link +
-                                         "\n[Line of Sight]: " + EmiState.State.Los +
-                                         "\n[Is Suspended]: " + EmiState.State.Suspend +
-                                         "\n[Is a Backup]: " + EmiState.State.Backup);
+                                         $"\n{Localization.GetText("InfoEmitter[Emitter Type]")}: " + mode +
+                                         $"\n{Localization.GetText("InfoEmitter[Grid Compatible]")}: " + EmiState.State.Compatible +
+                                         $"\n{Localization.GetText("InfoEmitter[Controller Link]")}: " + EmiState.State.Link +
+                                         $"\n{Localization.GetText("InfoEmitter[Line of Sight]")}: " + EmiState.State.Los +
+                                         $"\n{Localization.GetText("InfoEmitter[Is Suspended]")}: " + EmiState.State.Suspend +
+                                         $"\n{Localization.GetText("InfoEmitter[Is a Backup]")}: " + EmiState.State.Backup);
                 }
                 else
                 {
-                    stringBuilder.Append("[ Emitter Online ]" +
+                    stringBuilder.Append(Localization.GetText("InfoEmitter[ Emitter Online ]") +
                                          "\n" +
-                                         "\n[Emitter Type]: " + mode +
-                                         "\n[Grid Compatible]: " + EmiState.State.Compatible +
-                                         "\n[Controller Link]: " + EmiState.State.Link +
-                                         "\n[Line of Sight]: " + EmiState.State.Los +
-                                         "\n[Is Suspended]: " + EmiState.State.Suspend +
-                                         "\n[Is a Backup]: " + EmiState.State.Backup);
+                                         $"\n{Localization.GetText("InfoEmitter[Emitter Type]")}: " + mode +
+                                         $"\n{Localization.GetText("InfoEmitter[Grid Compatible]")}: " + EmiState.State.Compatible +
+                                         $"\n{Localization.GetText("InfoEmitter[Controller Link]")}: " + EmiState.State.Link +
+                                         $"\n{Localization.GetText("InfoEmitter[Line of Sight]")}: " + EmiState.State.Los +
+                                         $"\n{Localization.GetText("InfoEmitter[Is Suspended]")}: " + EmiState.State.Suspend +
+                                         $"\n{Localization.GetText("InfoEmitter[Is a Backup]")}: " + EmiState.State.Backup);
                 }
             }
             catch (Exception ex) { Log.Line($"Exception in AppendingCustomInfo: {ex}"); }

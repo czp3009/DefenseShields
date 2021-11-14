@@ -221,26 +221,26 @@ namespace DefenseShields
         {
             if (ShieldComp?.DefenseShields == null)
             {
-                stringBuilder.Append("[Controller Link]: False");
+                stringBuilder.Append($"{Localization.GetText("InfoEnhancer[Controller Link]")}: False");
             }
             else if (!EnhState.State.Backup && ShieldComp.DefenseShields.ShieldMode == DefenseShields.ShieldType.Station)
             {
-                stringBuilder.Append("[Online]: " + EnhState.State.Online +
+                stringBuilder.Append($"{Localization.GetText("InfoEnhancer[Online]")}: " + EnhState.State.Online +
                                      "\n" +
-                                     "\n[Amplifying Shield]: " + EnhState.State.Online +
-                                     "\n[Enhancer Mode]: Fortress" +
-                                     "\n[Bonsus] MaxHP, Repel Grids");
+                                     $"\n{Localization.GetText("InfoEnhancer[Amplifying Shield]")}: " + EnhState.State.Online +
+                                     $"\n{Localization.GetText("InfoEnhancer[Enhancer Mode]")}: Fortress" +
+                                     $"\n{Localization.GetText("InfoEnhancer[Bonsus]")} MaxHP, Repel Grids");
             }
             else if (!EnhState.State.Backup)
             {
-                stringBuilder.Append("[Online]: " + EnhState.State.Online +
+                stringBuilder.Append($"{Localization.GetText("InfoEnhancer[Online]")}: " + EnhState.State.Online +
                                      "\n" +
-                                     "\n[Shield Detected]: " + EnhState.State.Online +
-                                     "\n[Enhancer Mode]: EMP Option");
+                                     $"\n{Localization.GetText("InfoEnhancer[Shield Detected]")}: " + EnhState.State.Online +
+                                     $"\n{Localization.GetText("InfoEnhancer[Enhancer Mode]")}: EMP Option");
             }
             else
             {
-                stringBuilder.Append("[Backup]: " + EnhState.State.Backup);
+                stringBuilder.Append($"{Localization.GetText("InfoEnhancer[Backup]")}: " + EnhState.State.Backup);
             }
         }
 

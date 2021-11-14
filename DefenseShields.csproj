@@ -85,6 +85,7 @@
     <Compile Include="Data\Scripts\DefenseShields\SupportClasses\Collision\Ellipsoid\SphereTriangleCollision.cs" />
     <Compile Include="Data\Scripts\DefenseShields\SupportClasses\Collision\Ellipsoid\SphereTrianglesResponse.cs" />
     <Compile Include="Data\Scripts\DefenseShields\SupportClasses\Collision\Ellipsoid\Triangle.cs" />
+    <Compile Include="Data\Scripts\DefenseShields\SupportClasses\Localization.cs" />
     <Compile Include="Data\Scripts\DefenseShields\SupportClasses\PhysicsCatch\CatchEntities.cs" />
     <Compile Include="Data\Scripts\DefenseShields\SupportClasses\ShieldDtree.cs" />
     <Compile Include="Data\Scripts\DefenseShields\SupportBlocks\PlanetShield.cs" />

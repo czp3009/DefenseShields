@@ -353,13 +353,13 @@ namespace DefenseShields
 
         private void AppendingCustomInfo(IMyTerminalBlock block, StringBuilder stringBuilder)
         {
-            stringBuilder.Append("[Online]: " + ModState.State.Online +
-                                 "\n[Remodulating Shield]: " + ModState.State.Link +
+            stringBuilder.Append($"{Localization.GetText("InfoModulator[Online]")}: " + ModState.State.Online +
+                                 $"\n{Localization.GetText("InfoModulator[Remodulating Shield]")}: " + ModState.State.Link +
                                  "\n" +
-                                 "\n[Backup Modulator]: " + ModState.State.Backup +
-                                 "\n[Energy Protection]: " + ModState.State.ModulateEnergy.ToString("0") + "%" +
-                                 "\n[Kinetic Protection]: " + ModState.State.ModulateKinetic.ToString("0") + "%" +
-                                 "\n[Emp Protection]: " + ModSet.Settings.EmpEnabled);
+                                 $"\n{Localization.GetText("InfoModulator[Backup Modulator]")}: " + ModState.State.Backup +
+                                 $"\n{Localization.GetText("InfoModulator[Energy Protection]")}: " + ModState.State.ModulateEnergy.ToString("0") + "%" +
+                                 $"\n{Localization.GetText("InfoModulator[Kinetic Protection]")}: " + ModState.State.ModulateKinetic.ToString("0") + "%" +
+                                 $"\n{Localization.GetText("InfoModulator[Emp Protection]")}: " + ModSet.Settings.EmpEnabled);
         }
 
         private bool BlockMoveAnimationReset()

@@ -58,7 +58,7 @@
                 _heatScaleTime = 1;
             }
 
-            var heatScale = (ShieldMode == ShieldType.Station || DsSet.Settings.FortifyShield) && DsState.State.Enhancer ? Session.Enforced.HeatScaler * 2f : Session.Enforced.HeatScaler * 1f;
+            var heatScale = (ShieldMode == ShieldType.Station || DsSet.Settings.FortifyShield) && DsState.State.Enhancer ? Session.Enforced.HeatScaler * 3f : Session.Enforced.HeatScaler * 1f;
             var thresholdAmount = heatScale * _heatScaleHp;
             var nextThreshold = hp * thresholdAmount * (_currentHeatStep + 1);
             var currentThreshold = hp * thresholdAmount * _currentHeatStep;

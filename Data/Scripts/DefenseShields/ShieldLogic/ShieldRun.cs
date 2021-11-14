@@ -34,6 +34,8 @@ namespace DefenseShields
         public override void Init(MyObjectBuilder_EntityBase objectBuilder)
         {
             base.Init(objectBuilder);
+            MaxString = Localization.GetText("InfoShieldMaxString");
+            CapString = Localization.GetText("InfoShieldCapString");
             Shield = (IMyUpgradeModule)Entity;
             MyCube = (MyCubeBlock)Entity;
             FakeController.SlimBlock = MyCube.SlimBlock;

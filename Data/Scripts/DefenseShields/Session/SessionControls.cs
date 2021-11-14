@@ -40,71 +40,71 @@ namespace DefenseShields
                 if (DsControl) return;
                 var comp = block?.GameLogic?.GetAs<DefenseShields>();
                 TerminalHelpers.Separator(comp?.Shield, "DS-C_sep0");
-                ToggleShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_ToggleShield", "Shield Status", "Raise or Lower Shields", "Up", "Down", DsUi.GetRaiseShield, DsUi.SetRaiseShield);
+                ToggleShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_ToggleShield", Localization.GetText("TerminalToggleShieldTitle"), Localization.GetText("TerminalToggleShieldTooltip"), Localization.GetText("TerminalSwitchUp"), Localization.GetText("TerminalSwitchDown"), DsUi.GetRaiseShield, DsUi.SetRaiseShield);
                 TerminalHelpers.Separator(comp?.Shield, "DS-C_sep1");
                 //ChargeSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_ChargeRate", "Shield Charge Rate", "Percentage Of Power The Shield May Consume", DsUi.GetRate, DsUi.SetRate);
                 //ChargeSlider.SetLimits(20, 95);
-                PowerScaleSelect = TerminalHelpers.AddCombobox(comp?.Shield, "DS-C_PowerScale", "Select Power Scale", "Select the power scale to use", DsUi.GetPowerScale, DsUi.SetPowerScale, DsUi.ListPowerScale);
+                PowerScaleSelect = TerminalHelpers.AddCombobox(comp?.Shield, "DS-C_PowerScale", Localization.GetText("TerminalPowerScaleSelectTitle"), Localization.GetText("TerminalPowerScaleSelectTooltip"), DsUi.GetPowerScale, DsUi.SetPowerScale, DsUi.ListPowerScale);
 
-                PowerWatts = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_PowerWatts", "Power To Use", "Select the maximum scaled power the shield can use", DsUi.GetPowerWatts, DsUi.SetPowerWatts,  DsUi.EnablePowerWatts);
+                PowerWatts = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_PowerWatts", Localization.GetText("TerminalPowerWattsTitle"), Localization.GetText("TerminalPowerWattsTooltip"), DsUi.GetPowerWatts, DsUi.SetPowerWatts,  DsUi.EnablePowerWatts);
                 PowerWatts.SetLimits(1, 999);
                 if (comp != null && comp.GridIsMobile)
                 {
                     TerminalHelpers.Separator(comp.Shield, "DS-C_sep2");
                 }
 
-                Fit = TerminalHelpers.AddSlider(comp?.Shield, "DS-CFit", "Shield Fit", "Shield Fit", DsUi.GetFit, DsUi.SetFit);
+                Fit = TerminalHelpers.AddSlider(comp?.Shield, "DS-CFit", Localization.GetText("TerminalFitTitle"), Localization.GetText("TerminalFitTooltip"), DsUi.GetFit, DsUi.SetFit);
                 Fit.SetLimits(0, 25);
 
-                SphereFit = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_SphereFit", "Sphere Shield", "Sphere Shield", DsUi.GetSphereFit, DsUi.SetSphereFit);
-                FortifyShield = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_ShieldFortify", "Fortify Shield ", "Fortify Shield ", DsUi.GetFortify, DsUi.SetFortify);
+                SphereFit = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_SphereFit", Localization.GetText("TerminalSphereFitTitle"), Localization.GetText("TerminalSphereFitTooltip"), DsUi.GetSphereFit, DsUi.SetSphereFit);
+                FortifyShield = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_ShieldFortify", Localization.GetText("TerminalFortifyShieldTitle"), Localization.GetText("TerminalFortifyShieldTooltip"), DsUi.GetFortify, DsUi.SetFortify);
 
                 TerminalHelpers.Separator(comp?.Shield, "DS-C_sep3");
                 
-                WidthSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_WidthSlider", "Shield Size Width", "Shield Size Width", DsUi.GetWidth, DsUi.SetWidth);
+                WidthSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_WidthSlider", Localization.GetText("TerminalWidthSliderTitle"), Localization.GetText("TerminalWidthSliderTooltip"), DsUi.GetWidth, DsUi.SetWidth);
                 WidthSlider.SetLimits(30, 1000);
 
-                HeightSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_HeightSlider", "Shield Size Height", "Shield Size Height", DsUi.GetHeight, DsUi.SetHeight);
+                HeightSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_HeightSlider", Localization.GetText("TerminalHeightSliderTitle"), Localization.GetText("TerminalHeightSliderTooltip"), DsUi.GetHeight, DsUi.SetHeight);
                 HeightSlider.SetLimits(30, 1000);
 
-                DepthSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_DepthSlider", "Shield Size Depth", "Shield Size Depth", DsUi.GetDepth, DsUi.SetDepth);
+                DepthSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_DepthSlider", Localization.GetText("TerminalDepthSliderTitle"), Localization.GetText("TerminalDepthSliderTooltip"), DsUi.GetDepth, DsUi.SetDepth);
                 DepthSlider.SetLimits(30, 1000);
 
-                OffsetWidthSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_OffsetWidthSlider", "Width Offset", "Width Offset", DsUi.GetOffsetWidth, DsUi.SetOffsetWidth);
+                OffsetWidthSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_OffsetWidthSlider", Localization.GetText("TerminalOffsetWidthSliderTitle"), Localization.GetText("TerminalOffsetWidthSliderTooltip"), DsUi.GetOffsetWidth, DsUi.SetOffsetWidth);
                 OffsetWidthSlider.SetLimits(-69, 69);
 
-                OffsetHeightSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_OffsetHeightSlider", "Height Offset", "Height Offset", DsUi.GetOffsetHeight, DsUi.SetOffsetHeight);
+                OffsetHeightSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_OffsetHeightSlider", Localization.GetText("TerminalOffsetHeightSliderTitle"), Localization.GetText("TerminalOffsetHeightSliderTooltip"), DsUi.GetOffsetHeight, DsUi.SetOffsetHeight);
                 OffsetHeightSlider.SetLimits(-69, 69);
 
-                OffsetDepthSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_OffsetDepthSlider", "Depth Offset", "Depth Offset", DsUi.GetOffsetDepth, DsUi.SetOffsetDepth);
+                OffsetDepthSlider = TerminalHelpers.AddSlider(comp?.Shield, "DS-C_OffsetDepthSlider", Localization.GetText("TerminalOffsetDepthSliderTitle"), Localization.GetText("TerminalOffsetDepthSliderTooltip"), DsUi.GetOffsetDepth, DsUi.SetOffsetDepth);
                 OffsetDepthSlider.SetLimits(-69, 69);
 
                 TerminalHelpers.Separator(comp?.Shield, "DS-C_sep4");
 
-                BatteryBoostCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_UseBatteries", "Ignore battery input power ", "Allow shields to fight with batteries for power", DsUi.GetBatteries, DsUi.SetBatteries);
-                SendToHudCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_HideIcon", "Broadcast Shield Status To Hud", "Broadcast Shield Status To Nearby Friendly Huds", DsUi.GetSendToHud, DsUi.SetSendToHud);
+                BatteryBoostCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_UseBatteries", Localization.GetText("TerminalBatteryBoostCheckBoxTitle"), Localization.GetText("TerminalBatteryBoostCheckBoxTooltip"), DsUi.GetBatteries, DsUi.SetBatteries);
+                SendToHudCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_HideIcon", Localization.GetText("TerminalSendToHudCheckBoxTitle"), Localization.GetText("TerminalSendToHudCheckBoxTooltip"), DsUi.GetSendToHud, DsUi.SetSendToHud);
                 TerminalHelpers.Separator(comp?.Shield, "DS-C_sep5");
-                ShellSelect = TerminalHelpers.AddCombobox(comp?.Shield, "DS-C_ShellSelect", "Select Shield Look", "Select shield's shell texture", DsUi.GetShell, DsUi.SetShell, DsUi.ListShell);
+                ShellSelect = TerminalHelpers.AddCombobox(comp?.Shield, "DS-C_ShellSelect", Localization.GetText("TerminalShellSelectTitle"), Localization.GetText("TerminalShellSelectTooltip"), DsUi.GetShell, DsUi.SetShell, DsUi.ListShell);
 
-                ShellVisibility = TerminalHelpers.AddCombobox(comp?.Shield, "DS-C_ShellSelect", "Select Shield Visibility", "Determines when the shield is visible", DsUi.GetVisible, DsUi.SetVisible, DsUi.ListVisible);
+                ShellVisibility = TerminalHelpers.AddCombobox(comp?.Shield, "DS-C_ShellSelect", Localization.GetText("TerminalShellVisibilityTitle"), Localization.GetText("TerminalShellVisibilityTooltip"), DsUi.GetVisible, DsUi.SetVisible, DsUi.ListVisible);
 
-                HideActiveCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_HideActive", "Hide Shield Health On Hit  ", "Hide Shield Health Grid On Hit", DsUi.GetHideActive, DsUi.SetHideActive);
+                HideActiveCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_HideActive", Localization.GetText("TerminalHideActiveCheckBoxTitle"), Localization.GetText("TerminalHideActiveCheckBoxTooltip"), DsUi.GetHideActive, DsUi.SetHideActive);
 
                 //RefreshAnimationCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_RefreshAnimation", "Show Refresh Animation  ", "Show Random Refresh Animation", DsUi.GetRefreshAnimation, DsUi.SetRefreshAnimation);
                 //HitWaveAnimationCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_HitWaveAnimation", "Show Hit Wave Animation", "Show Wave Effect On Shield Damage", DsUi.GetHitWaveAnimation, DsUi.SetHitWaveAnimation);
-                NoWarningSoundsCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_NoWarningSounds", "Disable audio warnings    ", "Supress shield audio warnings", DsUi.GetNoWarningSounds, DsUi.SetNoWarningSounds);
-                DimShieldHitsCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_DimShieldHits", "Dim Incoming Hit Effects ", "Supress brightness of incoming hit effects", DsUi.GetDimShieldHits, DsUi.SetDimShieldHits);
+                NoWarningSoundsCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_NoWarningSounds", Localization.GetText("TerminalNoWarningSoundsCheckBoxTitle"), Localization.GetText("TerminalNoWarningSoundsCheckBoxTooltip"), DsUi.GetNoWarningSounds, DsUi.SetNoWarningSounds);
+                DimShieldHitsCheckBox = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_DimShieldHits", Localization.GetText("TerminalDimShieldHitsCheckBoxTitle"), Localization.GetText("TerminalDimShieldHitsCheckBoxTooltip"), DsUi.GetDimShieldHits, DsUi.SetDimShieldHits);
 
                 TerminalHelpers.Separator(comp?.Shield, "DS-C_sep6");
-                SideShunting = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_SideRedirect", "Shunt Shields", "Enable Shield Shunting", DsUi.GetSideShunting, DsUi.SetSideShunting);
-                ShowShunting = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_ShowRedirect", "Show Shunted Shields", "Enable/Disable showing side shield states", DsUi.GetShowShunting, DsUi.SetShowShunting);
+                SideShunting = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_SideRedirect", Localization.GetText("TerminalSideShuntingTitle"), Localization.GetText("TerminalSideShuntingTooltip"), DsUi.GetSideShunting, DsUi.SetSideShunting);
+                ShowShunting = TerminalHelpers.AddCheckbox(comp?.Shield, "DS-C_ShowRedirect", Localization.GetText("TerminalShowShuntingTitle"), Localization.GetText("TerminalShowShuntingTooltip"), DsUi.GetShowShunting, DsUi.SetShowShunting);
 
-                TopShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_TopShield", "Shunt Top Shield", "Redirect Top shield power to others", "Push", "Pull", DsUi.GeTopShield, DsUi.SetTopShield, DsUi.RedirectEnabled);
-                BottomShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_BottomShield", "Shunt Bottom Shield", "Redirect bottom shield power to others", "Push", "Pull", DsUi.GetBottomShield, DsUi.SetBottomShield, DsUi.RedirectEnabled);
-                LeftShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_LeftShield", "Shunt Left Shield", "Redirect Left shield power to others", "Push", "Pull", DsUi.GetLeftShield, DsUi.SetLeftShield, DsUi.RedirectEnabled);
-                RightShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_RightShield", "Shunt Right Shield", "Redirect Right shield power to others", "Push", "Pull", DsUi.GetRightShield, DsUi.SetRightShield, DsUi.RedirectEnabled);
-                FrontShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_FrontShield", "Shunt Front Shield", "Redirect Front shield power to others", "Push", "Pull", DsUi.GetFrontShield, DsUi.SetFrontShield, DsUi.RedirectEnabled);
-                BackShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_BackShield", "Shunt Back Shield", "Redirect Back shield power to others", "Push", "Pull", DsUi.GetBackShield, DsUi.SetBackShield, DsUi.RedirectEnabled);
+                TopShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_TopShield", Localization.GetText("TerminalTopShieldTitle"), Localization.GetText("TerminalTopShieldTooltip"), Localization.GetText("TerminalSwitchPush"), Localization.GetText("TerminalSwitchPull"), DsUi.GeTopShield, DsUi.SetTopShield, DsUi.RedirectEnabled);
+                BottomShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_BottomShield", Localization.GetText("TerminalBottomShieldTitle"), Localization.GetText("TerminalBottomShieldTooltip"), Localization.GetText("TerminalSwitchPush"), Localization.GetText("TerminalSwitchPull"), DsUi.GetBottomShield, DsUi.SetBottomShield, DsUi.RedirectEnabled);
+                LeftShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_LeftShield", Localization.GetText("TerminalLeftShieldTitle"), Localization.GetText("TerminalLeftShieldTooltip"), Localization.GetText("TerminalSwitchPush"), Localization.GetText("TerminalSwitchPull"), DsUi.GetLeftShield, DsUi.SetLeftShield, DsUi.RedirectEnabled);
+                RightShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_RightShield", Localization.GetText("TerminalRightShieldTitle"), Localization.GetText("TerminalRightShieldTooltip"), Localization.GetText("TerminalSwitchPush"), Localization.GetText("TerminalSwitchPull"), DsUi.GetRightShield, DsUi.SetRightShield, DsUi.RedirectEnabled);
+                FrontShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_FrontShield", Localization.GetText("TerminalFrontShieldTitle"), Localization.GetText("TerminalFrontShieldTooltip"), Localization.GetText("TerminalSwitchPush"), Localization.GetText("TerminalSwitchPull"), DsUi.GetFrontShield, DsUi.SetFrontShield, DsUi.RedirectEnabled);
+                BackShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_BackShield", Localization.GetText("TerminalBackShieldTitle"), Localization.GetText("TerminalBackShieldTooltip"), Localization.GetText("TerminalSwitchPush"), Localization.GetText("TerminalSwitchPull"), DsUi.GetBackShield, DsUi.SetBackShield, DsUi.RedirectEnabled);
 
 
                 CreateAction<IMyUpgradeModule>(ToggleShield);
@@ -270,7 +270,7 @@ namespace DefenseShields
 
             var action0 = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_DepthIncrease");
             action0.Icon = @"Textures\GUI\Icons\Actions\Increase.dds";
-            action0.Name = new StringBuilder($"Depth Increase");
+            action0.Name = new StringBuilder(Localization.GetText("ActionDepthIncrease"));
             action0.Action = TerminalDepthIncrease;
             action0.Writer = DepthWriter;
             action0.Enabled = HasShield;
@@ -279,7 +279,7 @@ namespace DefenseShields
 
             var action1 = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_DepthDecrease");
             action1.Icon = @"Textures\GUI\Icons\Actions\Decrease.dds";
-            action1.Name = new StringBuilder($"Depth Decrease");
+            action1.Name = new StringBuilder(Localization.GetText("ActionDepthDecrease"));
             action1.Action = TerminalActionDepthDecrease;
             action1.Writer = DepthWriter;
             action1.Enabled = HasShield;
@@ -293,7 +293,7 @@ namespace DefenseShields
 
             var action0 = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_WidthIncrease");
             action0.Icon = @"Textures\GUI\Icons\Actions\Increase.dds";
-            action0.Name = new StringBuilder($"Width Increase");
+            action0.Name = new StringBuilder(Localization.GetText("ActionWidthIncrease"));
             action0.Action = TerminalActioWidthIncrease;
             action0.Writer = WidthWriter;
             action0.Enabled = HasShield;
@@ -302,7 +302,7 @@ namespace DefenseShields
 
             var action1 = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_WidthDecrease");
             action1.Icon = @"Textures\GUI\Icons\Actions\Decrease.dds";
-            action1.Name = new StringBuilder($"Width Decrease");
+            action1.Name = new StringBuilder(Localization.GetText("ActionWidthDecrease"));
             action1.Action = TerminalActionWidthDecrease;
             action1.Writer = WidthWriter;
             action1.Enabled = HasShield;
@@ -316,7 +316,7 @@ namespace DefenseShields
 
             var action0 = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_HeightIncrease");
             action0.Icon = @"Textures\GUI\Icons\Actions\Increase.dds";
-            action0.Name = new StringBuilder($"Height Increase");
+            action0.Name = new StringBuilder(Localization.GetText("ActionHeightIncrease"));
             action0.Action = TerminalActioHeightIncrease;
             action0.Writer = HeightWriter;
             action0.Enabled = HasShield;
@@ -325,7 +325,7 @@ namespace DefenseShields
 
             var action1 = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_HeightDecrease");
             action1.Icon = @"Textures\GUI\Icons\Actions\Decrease.dds";
-            action1.Name = new StringBuilder($"Height Decrease");
+            action1.Name = new StringBuilder(Localization.GetText("ActionHeightDecrease"));
             action1.Action = TerminalActionHeightDecrease;
             action1.Writer = HeightWriter;
             action1.Enabled = HasShield;
@@ -339,7 +339,7 @@ namespace DefenseShields
 
             var action0 = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_FitIncrease");
             action0.Icon = @"Textures\GUI\Icons\Actions\Increase.dds";
-            action0.Name = new StringBuilder($"Fit Increase");
+            action0.Name = new StringBuilder(Localization.GetText("ActionFitIncrease"));
             action0.Action = TerminalActioFitSizeIncrease;
             action0.Writer = FitSizeWriter;
             action0.Enabled = HasShield;
@@ -348,7 +348,7 @@ namespace DefenseShields
 
             var action1 = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_FitDecrease");
             action1.Icon = @"Textures\GUI\Icons\Actions\Decrease.dds";
-            action1.Name = new StringBuilder($"Fit Decrease");
+            action1.Name = new StringBuilder(Localization.GetText("ActionFitDecrease"));
             action1.Action = TerminalActionFitSizeDecrease;
             action1.Writer = FitSizeWriter;
             action1.Enabled = HasShield;
@@ -372,14 +372,14 @@ namespace DefenseShields
                 if (ModControl) return;
                 var comp = block?.GameLogic?.GetAs<Modulators>();
                 ModSep1 = TerminalHelpers.Separator(comp?.Modulator, "DS-M_sep1");
-                ModDamage = TerminalHelpers.AddSlider(comp?.Modulator, "DS-M_DamageModulation", "Balance Shield Protection", "Balance Shield Protection", ModUi.GetDamage, ModUi.SetDamage);
+                ModDamage = TerminalHelpers.AddSlider(comp?.Modulator, "DS-M_DamageModulation", Localization.GetText("TerminalModDamageTitle"), Localization.GetText("TerminalModDamageTooltip"), ModUi.GetDamage, ModUi.SetDamage);
                 ModDamage.SetLimits(20, 180);
                 ModSep2 = TerminalHelpers.Separator(comp?.Modulator, "DS-M_sep2");
-                ModReInforce = TerminalHelpers.AddCheckbox(comp?.Modulator, "DS-M_ModulateReInforceProt", "Enhance structural integrity", "Enhance structural integrity, prevents damage from collisions", ModUi.GetReInforceProt, ModUi.SetReInforceProt);
-                ModVoxels = TerminalHelpers.AddCheckbox(comp?.Modulator, " DS-M_ModulateVoxels", "Terrain is ignored by shield", "Let voxels bypass shield", ModUi.GetVoxels, ModUi.SetVoxels);
-                ModGrids = TerminalHelpers.AddCheckbox(comp?.Modulator, "DS-M_ModulateGrids", "Entities may pass the shield", "Let grid bypass shield", ModUi.GetGrids, ModUi.SetGrids);
-                ModAllies = TerminalHelpers.AddCheckbox(comp?.Modulator, "DS-M_ModulateAllies", "Allied players can bypass", "Let ally players bypass shield", ModUi.GetAllies, ModUi.SetAllies);
-                ModEmp = TerminalHelpers.AddCheckbox(comp?.Modulator, "DS-M_ModulateEmpProt", "Protects against EMP damage", "But generates heat 10x faster", ModUi.GetEmpProt, ModUi.SetEmpProt);
+                ModReInforce = TerminalHelpers.AddCheckbox(comp?.Modulator, "DS-M_ModulateReInforceProt", Localization.GetText("TerminalModReInforceTitle"), Localization.GetText("TerminalModReInforceTooltip"), ModUi.GetReInforceProt, ModUi.SetReInforceProt);
+                ModVoxels = TerminalHelpers.AddCheckbox(comp?.Modulator, " DS-M_ModulateVoxels", Localization.GetText("TerminalModVoxelsTitle"), Localization.GetText("TerminalModVoxelsTooltip"), ModUi.GetVoxels, ModUi.SetVoxels);
+                ModGrids = TerminalHelpers.AddCheckbox(comp?.Modulator, "DS-M_ModulateGrids", Localization.GetText("TerminalModGridsTitle"), Localization.GetText("TerminalModGridsTooltip"), ModUi.GetGrids, ModUi.SetGrids);
+                ModAllies = TerminalHelpers.AddCheckbox(comp?.Modulator, "DS-M_ModulateAllies", Localization.GetText("TerminalModAlliesTitle"), Localization.GetText("TerminalModAlliesTooltip"), ModUi.GetAllies, ModUi.SetAllies);
+                ModEmp = TerminalHelpers.AddCheckbox(comp?.Modulator, "DS-M_ModulateEmpProt", Localization.GetText("TerminalModEmpTitle"), Localization.GetText("TerminalModEmpTooltip"), ModUi.GetEmpProt, ModUi.SetEmpProt);
 
                 CreateActionDamageModRate<IMyUpgradeModule>(ModDamage);
 
@@ -456,7 +456,7 @@ namespace DefenseShields
                 Action<IMyTerminalBlock, StringBuilder> writer = (b, s) => s.Append(c.Getter(b) ? c.OnText : c.OffText);
                 {
                     var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_ShuntToggle");
-                    a.Name = new StringBuilder(c.Title.String).Append(" - ").Append(" Push").Append(" /").Append(" Pull");
+                    a.Name = new StringBuilder(c.Title.String).Append(" - ").Append($" {Localization.GetText("TerminalSwitchPush")}").Append(" /").Append($" {Localization.GetText("TerminalSwitchPull")}");
 
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\SmallShipToggle.dds";
 
@@ -468,7 +468,7 @@ namespace DefenseShields
                 }
                 {
                     var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_ShuntOn");
-                    a.Name = new StringBuilder(c.Title.String).Append(" - ").Append(" Push");
+                    a.Name = new StringBuilder(c.Title.String).Append(" - ").Append($" {Localization.GetText("TerminalSwitchPush")}");
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\SmallShipSwitchOn.dds";
                     a.ValidForGroups = true;
                     a.Action = (b) => c.Setter(b, true);
@@ -478,7 +478,7 @@ namespace DefenseShields
                 }
                 {
                     var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_ShuntOff");
-                    a.Name = new StringBuilder(c.Title.String).Append(" - ").Append(" Pull");
+                    a.Name = new StringBuilder(c.Title.String).Append(" - ").Append($" {Localization.GetText("TerminalSwitchPull")}");
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\LargeShipSwitchOn.dds";
                     a.ValidForGroups = true;
                     a.Action = (b) => c.Setter(b, false);
@@ -757,7 +757,7 @@ namespace DefenseShields
 
                 {
                     var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_Reset");
-                    a.Name = new StringBuilder("Default ").Append(name);
+                    a.Name = new StringBuilder($"{Localization.GetText("ActionDefault")} ").Append(name);
                     if (!gridSizeDefaultValue)
                         a.Name.Append(" (").Append(defaultValue.ToString("0.###")).Append(")");
                     a.Icon = iconReset;
@@ -769,7 +769,7 @@ namespace DefenseShields
                 }
                 {
                     var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_Increase");
-                    a.Name = new StringBuilder("Increase ").Append(name).Append(" (+").Append(modifier.ToString("0.###")).Append(")");
+                    a.Name = new StringBuilder($"{Localization.GetText("ActionIncrease")} ").Append(name).Append(" (+").Append(modifier.ToString("0.###")).Append(")");
                     a.Icon = iconIncrease;
                     a.ValidForGroups = true;
                     a.Action = ActionAddDamageMod;
@@ -779,7 +779,7 @@ namespace DefenseShields
                 }
                 {
                     var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_Decrease");
-                    a.Name = new StringBuilder("Decrease ").Append(name).Append(" (-").Append(modifier.ToString("0.###")).Append(")");
+                    a.Name = new StringBuilder($"{Localization.GetText("ActionDecrease")} ").Append(name).Append(" (-").Append(modifier.ToString("0.###")).Append(")");
                     a.Icon = iconDecrease;
                     a.ValidForGroups = true;
                     a.Action = ActionSubtractDamageMod;

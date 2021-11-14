@@ -187,8 +187,8 @@
         }
 
         internal uint LastCustomInfoUpdate;
-        internal const string MaxString = ": MaxHp: ";
-        internal const string CapString = ": CapHp: ";
+        internal string MaxString;
+        internal string CapString;
 
         private void AppendingCustomInfo(IMyTerminalBlock block, StringBuilder stringBuilder)
         {
@@ -225,34 +225,34 @@
 
                     var redirectedSides = ShuntedSideCount();
                     var bonusAmount = redirectedSides * 20;
-                    stringBuilder.Append(status + maxString + hpValue.ToString("N0") +
-                                         "\n[Shield HP__]: " + (DsState.State.Charge * ConvToHp).ToString("N0") + " (" + shieldPercent.ToString("0") + "%)" +
-                                         "\n[HP Per Sec_]: " + (ShieldChargeRate * ConvToHp).ToString("N0") +
-                                         "\n[Damage In__]: " + _damageReadOut.ToString("N0") +
-                                         "\n[Charge Rate]: " + ShieldChargeRate.ToString("0.0") + " Mw" +
-                                         "\n[Full Charge_]: " + secToFull.ToString("N0") + "s" +
-                                         "\n[Over Heated]: " + DsState.State.Heat.ToString("0") + "%" +
-                                         "\n[Shunted Sides]: " + redirectedSides.ToString("0") + " (" + bonusAmount + "%)" +
-                                         "\n[Maintenance]: " + _shieldMaintaintPower.ToString("0.0") + " Mw" +
-                                         "\n[Shield Power]: " + ShieldCurrentPower.ToString("0.0") + " Mw" +
-                                         "\n[Power Use]: " + powerUsage.ToString("0.0") + " (" + GridMaxPower.ToString("0.0") + ")Mw" +
-                                         "\n[Power Density]: " + DsState.State.PowerDensity +
-                                         "\n[Block Density]: " + DsState.State.BlockDensity +
-                                         "\n[Density Total]: " + DsState.State.CapModifier);
+                    stringBuilder.Append(Localization.GetText($"InfoShieldStatus{status}") + maxString + hpValue.ToString("N0") +
+                                         $"\n{Localization.GetText("InfoShield[Shield HP__]")}: " + (DsState.State.Charge * ConvToHp).ToString("N0") + " (" + shieldPercent.ToString("0") + "%)" +
+                                         $"\n{Localization.GetText("InfoShield[HP Per Sec_]")}: " + (ShieldChargeRate * ConvToHp).ToString("N0") +
+                                         $"\n{Localization.GetText("InfoShield[Damage In__]")}: " + _damageReadOut.ToString("N0") +
+                                         $"\n{Localization.GetText("InfoShield[Charge Rate]")}: " + ShieldChargeRate.ToString("0.0") + " Mw" +
+                                         $"\n{Localization.GetText("InfoShield[Full Charge_]")}: " + secToFull.ToString("N0") + "s" +
+                                         $"\n{Localization.GetText("InfoShield[Over Heated]")}: " + DsState.State.Heat.ToString("0") + "%" +
+                                         $"\n{Localization.GetText("InfoShield[Shunted Sides]")}: " + redirectedSides.ToString("0") + " (" + bonusAmount + "%)" +
+                                         $"\n{Localization.GetText("InfoShield[Maintenance]")}: " + _shieldMaintaintPower.ToString("0.0") + " Mw" +
+                                         $"\n{Localization.GetText("InfoShield[Shield Power]")}: " + ShieldCurrentPower.ToString("0.0") + " Mw" +
+                                         $"\n{Localization.GetText("InfoShield[Power Use]")}: " + powerUsage.ToString("0.0") + " (" + GridMaxPower.ToString("0.0") + ")Mw" +
+                                         $"\n{Localization.GetText("InfoShield[Power Density]")}: " + DsState.State.PowerDensity +
+                                         $"\n{Localization.GetText("InfoShield[Block Density]")}: " + DsState.State.BlockDensity +
+                                         $"\n{Localization.GetText("InfoShield[Density Total]")}: " + DsState.State.CapModifier);
                 }
                 else {
 
-                    stringBuilder.Append("Shield Status " + status +
+                    stringBuilder.Append($"{Localization.GetText("InfoShieldStatus")} " + Localization.GetText($"InfoShieldStatus{status}") +
                                          "\n" +
-                                         "\n[Init Stage]: " + initStage + " of 4" +
-                                         "\n[Emitter Ok]: " + validEmitterId +
-                                         "\n[HP Stored]: " + (DsState.State.Charge * ConvToHp).ToString("N0") + " (" + shieldPercent.ToString("0") + "%)" +
-                                         "\n[Shield Mode]: " + ShieldMode +
-                                         "\n[Emitter LoS]: " + (DsState.State.EmitterLos) +
-                                         "\n[Last Woken]: " + LastWokenTick + "/" + _tick +
-                                         "\n[Waking Up]: " + DsState.State.Waking +
-                                         "\n[Grid Owns Controller]: " + DsState.State.IsOwner +
-                                         "\n[In Grid's Faction]: " + DsState.State.InFaction);
+                                         $"\n{Localization.GetText("InfoShield[Init Stage]")}: " + initStage + " of 4" +
+                                         $"\n{Localization.GetText("InfoShield[Emitter Ok]")}: " + validEmitterId +
+                                         $"\n{Localization.GetText("InfoShield[HP Stored]")}: " + (DsState.State.Charge * ConvToHp).ToString("N0") + " (" + shieldPercent.ToString("0") + "%)" +
+                                         $"\n{Localization.GetText("InfoShield[Shield Mode]")}: " + ShieldMode +
+                                         $"\n{Localization.GetText("InfoShield[Emitter LoS]")}: " + (DsState.State.EmitterLos) +
+                                         $"\n{Localization.GetText("InfoShield[Last Woken]")}: " + LastWokenTick + "/" + _tick +
+                                         $"\n{Localization.GetText("InfoShield[Waking Up]")}: " + DsState.State.Waking +
+                                         $"\n{Localization.GetText("InfoShield[Grid Owns Controller]")}: " + DsState.State.IsOwner +
+                                         $"\n{Localization.GetText("InfoShield[In Grid's Faction]")}: " + DsState.State.InFaction);
                 }
             }
             catch (Exception ex) { Log.Line($"Exception in Controller AppendingCustomInfo: {ex}"); }

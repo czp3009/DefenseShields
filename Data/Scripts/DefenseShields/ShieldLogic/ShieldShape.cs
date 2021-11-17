@@ -241,22 +241,18 @@ namespace DefenseShields
             if (_shapeChanged) {
 
                 SOriBBoxD.HalfExtent = ShieldSize;
-                ShieldAabbScaled.Min = ShieldSize;
-                ShieldAabbScaled.Max = -ShieldSize;
+                ShieldAabbScaled.Min = -ShieldSize;
+                ShieldAabbScaled.Max = ShieldSize;
                 _ellipsoidSa.Update(DetectMatrixOutside.Scale.X, DetectMatrixOutside.Scale.Y, DetectMatrixOutside.Scale.Z);
                 BoundingRange = ShieldSize.AbsMax();
                 ShieldSphere3K.Radius = BoundingRange + 3000;
                 WebSphere.Radius = BoundingRange + (IsStatic ? 100 : 10);
 
                 _ellipsoidSurfaceArea = _ellipsoidSa.Surface;
-                EllipsoidVolume = 1.333333 * Math.PI * DetectMatrixOutside.Scale.X * DetectMatrixOutside.Scale.Y * DetectMatrixOutside.Scale.Z;
                 var magicMod = DsState.State.Enhancer && ShieldMode == ShieldType.Station ? 100f : DsState.State.Enhancer && DsSet.Settings.FortifyShield ? 12f + Math.Sqrt(DsSet.Settings.Fit) : 1f;
                 var ellipsoidMagic = _ellipsoidSurfaceArea / (MagicEllipsoidRatio * magicMod);
                 var rawScaler = Math.Sqrt(ellipsoidMagic);
-
-                var adjustment = rawScaler > 100 ? Session.Enforced.SizeScaler : rawScaler > 10 ? Session.Enforced.SizeScaler / 10 : rawScaler > 1 ? Session.Enforced.SizeScaler / 50 : rawScaler;
-
-                _sizeScaler = (float) (Session.Enforced.SizeScaler > 1 ? (Math.Round(rawScaler / adjustment) * adjustment) : rawScaler);
+                _sizeScaler = (float)rawScaler;
 
                 /// Large ship bonus
                 var size = DsState.State.RealGridHalfExtents.Volume * 2;

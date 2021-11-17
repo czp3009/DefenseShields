@@ -113,7 +113,7 @@ namespace DefenseShields
         private const int FallBackStep = 10;
         private const float MagicCapRatio = 2000;
         private const float MagicEllipsoidRatio = 1000;
-        private const float BlockDensityLimit = 0.035f;
+        private const float BlockDensityLimit = 0.05f;
         private const float PowerDensityLimit = 0.125f;
 
         private const int SyncCount = 60;
@@ -364,7 +364,7 @@ namespace DefenseShields
         //internal float ShieldMinMaxHpBase { get; set; }
 
         internal double BoundingRange { get; set; }
-        internal double EllipsoidVolume { get; set; }
+        //internal double EllipsoidVolume { get; set; }
 
         internal bool NotFailed { get; set; }
         internal bool DeformEnabled { get; set; }

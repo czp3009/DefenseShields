@@ -250,6 +250,7 @@ namespace DefenseShields
                 {
                     if (entInfo != null)
                     {
+
                         var interestingEnts = relation == Ent.Floater || relation == Ent.EnemyGrid || relation == Ent.NobodyGrid || relation == Ent.Shielded;
                         if (entPhysics != null && entPhysics.IsMoving) entChanged = true;
                         else if (entInfo.Touched || (refreshInfo && interestingEnts && !ent.PositionComp.LocalAABB.Equals(entInfo.Box)))
@@ -260,9 +261,9 @@ namespace DefenseShields
                         }
 
                         _enablePhysics = true;
-                        if (refreshInfo)
+                        if (refreshInfo || entChanged)
                         {
-                            if ((relation == Ent.EnemyGrid || relation == Ent.NobodyGrid)  && entInfo.CacheBlockList.Count != (ent as MyCubeGrid).BlocksCount)
+                            if ((relation == Ent.EnemyGrid || relation == Ent.NobodyGrid) && entInfo.CacheBlockList.Count != (ent as MyCubeGrid).BlocksCount)
                             {
                                 entInfo.RefreshNow = true;
                             }

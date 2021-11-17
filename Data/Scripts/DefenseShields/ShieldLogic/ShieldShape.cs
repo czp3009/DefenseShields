@@ -246,7 +246,7 @@ namespace DefenseShields
                 _ellipsoidSa.Update(DetectMatrixOutside.Scale.X, DetectMatrixOutside.Scale.Y, DetectMatrixOutside.Scale.Z);
                 BoundingRange = ShieldSize.AbsMax();
                 ShieldSphere3K.Radius = BoundingRange + 3000;
-                WebSphere.Radius = BoundingRange + (IsStatic ? 100 : 10);
+                WebSphere.Radius = BoundingRange + (IsStatic ? 20 : 10);
 
                 _ellipsoidSurfaceArea = _ellipsoidSa.Surface;
                 var magicMod = DsState.State.Enhancer && ShieldMode == ShieldType.Station ? 100f : DsState.State.Enhancer && DsSet.Settings.FortifyShield ? 12f + Math.Sqrt(DsSet.Settings.Fit) : 1f;

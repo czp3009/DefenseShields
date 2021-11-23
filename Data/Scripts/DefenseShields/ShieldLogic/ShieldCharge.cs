@@ -77,6 +77,7 @@ namespace DefenseShields
 
         private void CalculatePowerCharge()
         {
+            var heat = DsState.State.Heat;
             var hpsEfficiency = Session.Enforced.HpsEfficiency;
             var baseScaler = Session.Enforced.BaseScaler;
             var maintenanceCost = Session.Enforced.MaintenanceCost;
@@ -87,8 +88,10 @@ namespace DefenseShields
 
             if (ShieldMode == ShieldType.Station && DsState.State.Enhancer)
                 hpsEfficiency *= 3.5f;
-            else if (fortify)
-                hpsEfficiency *= 3f;
+            else if (fortify) {
+                var fortMod = heat <= 0 ? 3f : heat == 1 ? 2f : heat == 2 ? 1.5f : 1.25f;
+                hpsEfficiency *= fortMod;
+            }
 
             var bufferMaxScaler = (baseScaler * shieldTypeRatio) / _sizeScaler;
 
@@ -148,7 +151,7 @@ namespace DefenseShields
                 }
             }
 
-            if (DsState.State.Heat != 0) 
+            if (heat != 0) 
                 UpdateHeatRate();
             else 
                 _expChargeReduction = 0;

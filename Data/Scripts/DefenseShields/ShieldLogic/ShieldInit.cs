@@ -341,6 +341,7 @@ namespace DefenseShields
                     DsState.State.Sleeping = false;
                     DsState.State.Waking = false;
                     DsState.State.FieldBlocked = false;
+                    DsState.State.GridHalfExtents = Vector3D.Zero;
                     DsState.State.Heat = 0;
                 }
             }

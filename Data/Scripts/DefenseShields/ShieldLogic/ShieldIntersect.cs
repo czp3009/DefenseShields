@@ -154,9 +154,10 @@ namespace DefenseShields
             var bOriBBoxD = new MyOrientedBoundingBoxD(grid.PositionComp.LocalAABB, grid.PositionComp.WorldMatrixRef);
             if (EntInside(grid, ref bOriBBoxD)) return;
 
+            var sObb = ShieldComp.DefenseShields.SOriBBoxD;
             Quaternion quatMagic;
-            Quaternion.Divide(ref bOriBBoxD.Orientation, ref SOriBBoxD.Orientation, out quatMagic);
-            if (!CustomCollision.IntersectEllipsoidObb(ref DetectMatrixOutsideInv, ref bOriBBoxD.Center, ref bOriBBoxD.HalfExtent, ref SOriBBoxD.HalfExtent, ref quatMagic))
+            Quaternion.Divide(ref sObb.Orientation, ref SOriBBoxD.Orientation, out quatMagic);
+            if (!CustomCollision.IntersectEllipsoidObb(ref DetectMatrixOutsideInv, ref sObb.Center, ref sObb.HalfExtent, ref SOriBBoxD.HalfExtent, ref quatMagic))
                 return;
 
             ShieldGridComponent shieldComponent;

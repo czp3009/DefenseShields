@@ -77,7 +77,7 @@ namespace DefenseShields
 
                                 var shieldActive = shield.DsState.State.Online && !shield.DsState.State.Lowered;
                                 if (!shieldActive) continue;
-                                var intersectDist = CustomCollision.IntersectEllipsoid(shield.DetectMatrixOutsideInv, shield.DetectionMatrix, ray);
+                                var intersectDist = CustomCollision.IntersectEllipsoid(ref shield.DetectMatrixOutsideInv, shield.DetectionMatrix, ref ray);
                                 var ellipsoid = intersectDist ?? 0;
 
                                 var notContained = isVoxelBase || intersectDist <= 0 && shield.GridIsMobile && !CustomCollision.PointInShield(trueAttacker.PositionComp.WorldAABB.Center, MatrixD.Invert(shield.ShieldShapeMatrix * shield.MyGrid.WorldMatrix));

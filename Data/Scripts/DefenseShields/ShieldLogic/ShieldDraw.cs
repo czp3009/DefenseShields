@@ -121,7 +121,8 @@ namespace DefenseShields
             var testDir = Vector3D.Normalize(line.From - line.To);
             var ray = new RayD(line.From, -testDir);
             var matrix = DetectionMatrix;
-            var intersectDist = CustomCollision.IntersectEllipsoid(MatrixD.Invert(matrix), matrix, ray);
+            var invMatrix = MatrixD.Invert(matrix);
+            var intersectDist = CustomCollision.IntersectEllipsoid(ref invMatrix, matrix, ref ray);
             var ellipsoid = intersectDist ?? line.Length;
             var shieldHitPos = line.From + (testDir * -ellipsoid);
             return shieldHitPos;

@@ -116,7 +116,7 @@ namespace DefenseShields
             var logic = block?.GameLogic?.GetAs<DefenseShields>()?.ShieldComp?.DefenseShields;
             if (logic == null) return null;
 
-            var intersectDist = CustomCollision.IntersectEllipsoid(logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ray);
+            var intersectDist = CustomCollision.IntersectEllipsoid(ref logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ref ray);
 
             if (!intersectDist.HasValue) return null;
             var ellipsoid = intersectDist ?? 0;
@@ -134,7 +134,7 @@ namespace DefenseShields
             if (logic == null) return null;
 
             var ray = new RayD(line.From, line.Direction);
-            var intersectDist = CustomCollision.IntersectEllipsoid(logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ray);
+            var intersectDist = CustomCollision.IntersectEllipsoid(ref logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ref ray);
 
             if (!intersectDist.HasValue) return null;
             var ellipsoid = intersectDist ?? 0;
@@ -474,7 +474,7 @@ namespace DefenseShields
             var logic = block?.GameLogic?.GetAs<DefenseShields>()?.ShieldComp?.DefenseShields;
             if (logic == null) return null;
 
-            var intersectDist = CustomCollision.IntersectEllipsoid(logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ray);
+            var intersectDist = CustomCollision.IntersectEllipsoid(ref logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ref ray);
 
             if (!intersectDist.HasValue) return null;
             var ellipsoid = intersectDist ?? 0;
@@ -487,7 +487,7 @@ namespace DefenseShields
             if (logic == null) return null;
             var ray = new RayD(line.From, line.Direction);
 
-            var intersectDist = CustomCollision.IntersectEllipsoid(logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ray);
+            var intersectDist = CustomCollision.IntersectEllipsoid(ref logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ref ray);
 
             if (!intersectDist.HasValue) return null;
             var ellipsoid = intersectDist ?? 0;
@@ -864,7 +864,7 @@ namespace DefenseShields
                 {
                     if (onlyIfOnline && (!c.DefenseShields.DsState.State.Online || c.DefenseShields.DsState.State.Lowered)) continue;
                     var s = c.DefenseShields;
-                    var intersectDist = CustomCollision.IntersectEllipsoid(s.DetectMatrixOutsideInv, s.DetectMatrixOutside, ray);
+                    var intersectDist = CustomCollision.IntersectEllipsoid(ref s.DetectMatrixOutsideInv, s.DetectMatrixOutside, ref ray);
                     if (!intersectDist.HasValue) continue;
                     var ellipsoid = intersectDist ?? 0;
                     if (ellipsoid > line.Length || ellipsoid > closest || CustomCollision.PointInShield(ray.Position, s.DetectMatrixOutsideInv)) continue;
@@ -932,7 +932,7 @@ namespace DefenseShields
             var logic = block?.GameLogic?.GetAs<DefenseShields>()?.ShieldComp?.DefenseShields;
             if (logic == null) return null;
 
-            Vector3D? closestShieldPoint = CustomCollision.ClosestEllipsoidPointToPos(logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, pos);
+            Vector3D? closestShieldPoint = CustomCollision.ClosestEllipsoidPointToPos(ref logic.DetectMatrixOutsideInv, logic.DetectMatrixOutside, ref pos);
 
             return closestShieldPoint;
         }

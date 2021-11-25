@@ -1,4 +1,6 @@
-﻿namespace DefenseShields
+﻿using VRage.Collections;
+
+namespace DefenseShields
 {
     using System;
     using System.Collections.Generic;
@@ -23,14 +25,6 @@
             var tick = Session.Instance.Tick;
             var entCenter = webent.PositionComp.WorldVolume.Center;
             if (entInfo.LastTick != tick) return;
-            if (entInfo.RefreshNow)
-            {
-                entInfo.CacheBlockList.Clear();
-                if (relation == Ent.NobodyGrid || relation == Ent.EnemyGrid)
-                {
-                    RefreshBlockCache(webent, entInfo);
-                }
-            }
             entInfo.RefreshNow = false;
 
             switch (relation)
@@ -111,7 +105,7 @@
             }
         }
 
-        private bool EntInside(MyEntity entity, MyOrientedBoundingBoxD bOriBBoxD)
+        private bool EntInside(MyEntity entity, ref MyOrientedBoundingBoxD bOriBBoxD)
         {
             if (entity != null && CustomCollision.PointInShield(entity.PositionComp.WorldVolume.Center, DetectMatrixOutsideInv))
             {
@@ -147,16 +141,24 @@
             if (entInfo == null) return;
 
             var bOriBBoxD = new MyOrientedBoundingBoxD(grid.PositionComp.LocalAABB, grid.PositionComp.WorldMatrixRef);
-            DsDebugDraw.DrawOBB(bOriBBoxD, Color.Red);
-            if (entInfo.Relation != Ent.EnemyGrid && entInfo.WasInside && EntInside(grid, bOriBBoxD)) return;
+            //DsDebugDraw.DrawOBB(bOriBBoxD, Color.Red);
+            if (entInfo.Relation != Ent.EnemyGrid && entInfo.WasInside && EntInside(grid, ref bOriBBoxD)) return;
             BlockIntersect(grid, ref bOriBBoxD, ref entInfo);
         }
 
+        private readonly List<Vector3D> _insidePoints = new List<Vector3D>();
         private void ShieldIntersect(MyEntity ent)
         {
             var grid = ent as MyCubeGrid;
             if (grid == null) return;
-            if (EntInside(grid, new MyOrientedBoundingBoxD(grid.PositionComp.LocalAABB, grid.PositionComp.WorldMatrixRef))) return;
+            var bOriBBoxD = new MyOrientedBoundingBoxD(grid.PositionComp.LocalAABB, grid.PositionComp.WorldMatrixRef);
+            if (EntInside(grid, ref bOriBBoxD)) return;
+
+            Quaternion quatMagic;
+            Quaternion.Divide(ref bOriBBoxD.Orientation, ref SOriBBoxD.Orientation, out quatMagic);
+            if (!CustomCollision.IntersectEllipsoidObb(ref DetectMatrixOutsideInv, ref bOriBBoxD.Center, ref bOriBBoxD.HalfExtent, ref SOriBBoxD.HalfExtent, ref quatMagic))
+                return;
+
             ShieldGridComponent shieldComponent;
             grid.Components.TryGet(out shieldComponent);
             if (shieldComponent?.DefenseShields == null) return;
@@ -171,12 +173,12 @@
             var dsVerts = ds.ShieldComp.PhysicsOutside;
             var dsMatrixInv = ds.DetectMatrixOutsideInv;
 
-            var insidePoints = new List<Vector3D>();
-            CustomCollision.ShieldX2PointsInside(dsVerts, dsMatrixInv, ShieldComp.PhysicsOutside, DetectMatrixOutsideInv, insidePoints);
+            _insidePoints.Clear();
+            CustomCollision.ShieldX2PointsInside(dsVerts, dsMatrixInv, ShieldComp.PhysicsOutside, DetectMatrixOutsideInv, _insidePoints);
 
             var collisionAvg = Vector3D.Zero;
-            var numOfPointsInside = insidePoints.Count;
-            for (int i = 0; i < numOfPointsInside; i++) collisionAvg += insidePoints[i];
+            var numOfPointsInside = _insidePoints.Count;
+            for (int i = 0; i < numOfPointsInside; i++) collisionAvg += _insidePoints[i];
 
             if (numOfPointsInside > 0) collisionAvg /= numOfPointsInside;
             if (collisionAvg == Vector3D.Zero)
@@ -257,15 +259,18 @@
             }
             var player = MyAPIGateway.Multiplayer.Players.GetPlayerControllingEntity(ent);
             if (player == null || player.PromoteLevel == MyPromoteLevel.Owner || player.PromoteLevel == MyPromoteLevel.Admin) return;
-            var obb = new MyOrientedBoundingBoxD(ent.PositionComp.WorldAABB.Center, ent.PositionComp.LocalAABB.HalfExtents, Quaternion.CreateFromRotationMatrix(ent.WorldMatrix));
-            var playerIntersect = CustomCollision.ObbIntersect(obb, DetectMatrixOutside, DetectMatrixOutsideInv);
-            if (playerIntersect != null)
+            var bOriBBoxD = new MyOrientedBoundingBoxD(ent.PositionComp.LocalAABB, ent.PositionComp.WorldMatrixRef);
+
+            Quaternion quatMagic;
+            Quaternion.Divide(ref bOriBBoxD.Orientation, ref SOriBBoxD.Orientation, out quatMagic);
+            if (CustomCollision.IntersectEllipsoidObb(ref DetectMatrixOutsideInv, ref bOriBBoxD.Center, ref bOriBBoxD.HalfExtent, ref SOriBBoxD.HalfExtent, ref quatMagic))
             {
+                var closestPos = CustomCollision.ClosestEllipsoidPointToPos(ref DetectMatrixOutsideInv, DetectMatrixOutside, ref bOriBBoxD.Center);
                 var collisionData = new MyCollisionPhysicsData
                 {
                     Entity1 = ent,
-                    Force1 = -Vector3.Normalize(ShieldEnt.PositionComp.WorldAABB.Center - (Vector3D)playerIntersect),
-                    CollisionAvg = (Vector3D)playerIntersect
+                    Force1 = -Vector3.Normalize(ShieldEnt.PositionComp.WorldAABB.Center - closestPos),
+                    CollisionAvg = closestPos
                 };
                 if (_isServer)
                 {
@@ -282,74 +287,48 @@
             {
                 if (entInfo == null || breaching == null || breaching.MarkedForClose) return;
 
-                if (bOriBBoxD.Intersects(ref SOriBBoxD))
+                Quaternion quatMagic;
+                Quaternion.Divide(ref bOriBBoxD.Orientation, ref SOriBBoxD.Orientation, out quatMagic);
+                if (CustomCollision.IntersectEllipsoidObb(ref DetectMatrixOutsideInv, ref bOriBBoxD.Center, ref bOriBBoxD.HalfExtent, ref SOriBBoxD.HalfExtent, ref quatMagic))
                 {
-                    Log.Line($"obbColl:{CustomCollision.IntersectEllipsoidObb(DetectMatrixOutsideInv, DetectMatrixOutside, bOriBBoxD)}");
-                    if (entInfo.Relation == Ent.Shielded &&  _tick - entInfo.RefreshTick == 0)
+                    if (_tick - entInfo.RefreshTick == 0 || entInfo.CacheBlockList.IsEmpty)
                     {
-                        entInfo.CacheBlockList.Clear();
+                        entInfo.CacheBlockList.ClearImmediate();
                         RefreshBlockCache(breaching, entInfo);
                     }
 
                     var collisionAvg = Vector3D.Zero;
-                    var damageBlocks = Session.Enforced.DisableBlockDamage == 0;
-                    var bQuaternion = Quaternion.CreateFromRotationMatrix(breaching.WorldMatrix);
-
                     const int blockDmgNum = 250;
 
                     var rawDamage = 0f;
-                    var blockSize = breaching.GridSize;
-                    var scaledBlockSize = blockSize * 3;
-                    var gc = breaching.WorldToGridInteger(DetectionCenter);
-                    var rc = ShieldSize.AbsMax() / blockSize;
-                    rc *= rc;
-                    rc += 1;
-                    rc = Math.Ceiling(rc);
                     var hits = 0;
-                    var blockPoints = new Vector3D[9];
 
-                    var cloneCacheList = Session.Instance.ListCubeAccelPool.Get();
-                    cloneCacheList.AddRange(entInfo.CacheBlockList);
                     var cubeHitSet = Session.Instance.SetCubeAccelPool.Get();
 
-                    for (int i = 0; i < cloneCacheList.Count; i++)
+                    for (int i = 0; i < entInfo.CacheBlockList.Count; i++)
                     {
-                        var accel = cloneCacheList[i];
-                        var blockPos = accel.BlockPos;
-                        var num1 = gc.X - blockPos.X;
-                        var num2 = gc.Y - blockPos.Y;
-                        var num3 = gc.Z - blockPos.Z;
-                        var result = (num1 * num1) + (num2 * num2) + (num3 * num3);
+                        var accel = entInfo.CacheBlockList[i];
+                        if (_isServer && (accel.Block == null || accel.Block.CubeGrid != breaching))
+                            continue;
 
-                        if (_isServer)
-                        {
-                            if (result > rc || accel.CubeExists && result > rc + scaledBlockSize) continue;
-                            if (accel.Block == null || accel.Block.CubeGrid != breaching) continue;
-                        }
-                        else
-                        {
-                            if (hits > blockDmgNum) break;
-                            if (result > rc || accel.CubeExists && result > rc + scaledBlockSize || accel.Block == null || accel.Block.CubeGrid != breaching || accel.Block.IsDestroyed) continue;
-                        }
+                        if (accel.Block == null || accel.Block.CubeGrid != breaching || accel.Block.IsDestroyed) 
+                            continue;
 
                         var block = accel.Block;
-                        var sMat = DetectMatrixOutside;
-                        var point = CustomCollision.BlockIntersect(block, accel.CubeExists, ref bQuaternion, ref sMat, ref DetectMatrixOutsideInv, ref blockPoints);
+                        var point = CustomCollision.BlockIntersect(block, accel.CubeExists, ref DetectMatrixOutsideInv, DetectMatrixOutside, ref SOriBBoxD.HalfExtent, ref quatMagic);
                         if (point == null) continue;
+
                         collisionAvg += (Vector3D)point;
                         hits++;
                         if (!_isServer) continue;
 
-                        if (hits > blockDmgNum) break;
-
                         rawDamage += block.Integrity;
-                        if (damageBlocks)
-                        {
+                        if (Session.Enforced.DisableBlockDamage == 0)
                             cubeHitSet.Add(accel);
-                        }
+
+                        if (hits > blockDmgNum)
+                            break;
                     }
-                    cloneCacheList.Clear();
-                    Session.Instance.ListCubeAccelPool.Return(cloneCacheList);
 
                     if (collisionAvg != Vector3D.Zero)
                     {
@@ -371,7 +350,7 @@
             catch (Exception ex) { Log.Line($"Exception in BlockIntersect: {ex}"); }
         }
 
-        public static void GetBlocksInsideSphereFast(MyCubeGrid grid, ref BoundingSphereD sphere, bool checkDestroyed, List<CubeAccel> blocks)
+        public static void GetBlocksInsideSphereFast(MyCubeGrid grid, ref BoundingSphereD sphere, bool checkDestroyed, ConcurrentCachingList<CubeAccel> blocks)
         {
             var radius = sphere.Radius;
             radius *= grid.GridSizeR;
@@ -402,7 +381,7 @@
                                     if (checkDestroyed && slim.IsDestroyed)
                                         continue;
 
-                                    blocks.Add(new CubeAccel {Block = slim, BlockPos = slim.Position, CubeExists = slim.FatBlock != null, Grid = (MyCubeGrid)slim.CubeGrid});
+                                    blocks.Add(new CubeAccel {Block = slim, CubeExists = slim.FatBlock != null, Grid = (MyCubeGrid)slim.CubeGrid});
 
                                 }
                             }
@@ -410,6 +389,7 @@
                     }
                 }
             }
+            blocks.ApplyAdditions();
         }
 
         private void ComputeCollisionPhysics(MyCubeGrid entity1, MyCubeGrid entity2, Vector3D collisionAvg)

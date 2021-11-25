@@ -234,7 +234,7 @@ namespace DefenseShields.Support
         public uint RefreshTick;
         public uint FirstTick;
         public DefenseShields.Ent Relation;
-        public List<CubeAccel> CacheBlockList = new List<CubeAccel>();
+        public ConcurrentCachingList<CubeAccel> CacheBlockList = new ConcurrentCachingList<CubeAccel>();
         public bool RefreshNow;
         public bool EnemySafeInside;
         public bool WasInside;
@@ -267,7 +267,7 @@ namespace DefenseShields.Support
             RefreshNow = false;
             Touched = false;
             Slowed = false;
-            CacheBlockList.Clear();
+            CacheBlockList.ClearImmediate();
             RefreshTick = 0;
             LastCollision = 0;
             ConsecutiveCollisions = 0;
@@ -362,7 +362,6 @@ namespace DefenseShields.Support
     {
         public IMySlimBlock Block;
         public MyCubeGrid Grid;
-        public Vector3I BlockPos;
         public bool CubeExists; 
     }
 

@@ -21,7 +21,8 @@ namespace DefenseShields.Support
             var velStepSize = entVel * MyEngineConstants.PHYSICS_STEP_SIZE_IN_SECONDS * 1;
             var futureCenter = entCenter + velStepSize;
             var testDir = Vector3D.Normalize(entCenter - futureCenter);
-            var ellipsoid = IntersectEllipsoid(ds.DetectMatrixOutsideInv, ds.DetectionMatrix, new RayD(entCenter, -testDir));
+            var ray = new RayD(entCenter, -testDir);
+            var ellipsoid = IntersectEllipsoid(ref ds.DetectMatrixOutsideInv, ds.DetectionMatrix, ref ray);
             var intersect = ellipsoid == null && PointInShield(entCenter, detectMatrixInv) || ellipsoid <= velStepSize.Length();
             return intersect;
         }
@@ -72,7 +73,7 @@ namespace DefenseShields.Support
             return leaving;
         }
 
-        public static float? IntersectEllipsoid(MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, RayD ray)
+        public static float? IntersectEllipsoid(ref MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, ref RayD ray)
         {
             var normSphere = new BoundingSphereD(Vector3D.Zero, 1f);
 
@@ -104,15 +105,18 @@ namespace DefenseShields.Support
             return (float?)(isNaN ? (double?)null : distance);
         }
 
-        public static bool IntersectEllipsoidObb(MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, MyOrientedBoundingBoxD obb)
+        public static bool IntersectEllipsoidObb(ref MatrixD ellipsoidMatrixInv, ref Vector3D obbCenter, ref Vector3D obbHalfExtent, ref Vector3D shieldHalfExtet, ref Quaternion dividedQuat)
         {
             var normSphere = new BoundingSphereD(Vector3D.Zero, 1f);
-
-            var newObb = new MyOrientedBoundingBoxD(Vector3D.Transform(obb.Center, ellipsoidMatrixInv), Vector3D.Normalize(Vector3D.Transform(obb.HalfExtent, ellipsoidMatrixInv)), obb.Orientation  * Quaternion.CreateFromRotationMatrix(ellipsoidMatrixInv));
-
-            Log.Line($"{newObb.Center} - {newObb.HalfExtent}");
+            var transObbCenter = Vector3D.Transform(obbCenter, ref ellipsoidMatrixInv);
+            var squishedSize = obbHalfExtent / shieldHalfExtet;
+            //var quatMagic = Quaternion.Divide(obb.Orientation, SOriBBoxD.Orientation);
+            var newObb = new MyOrientedBoundingBoxD(transObbCenter, squishedSize, dividedQuat);
 
             var intersected = newObb.Intersects(ref normSphere);
+
+            //DsDebugDraw.DrawSphere(normSphere, Color.Blue);
+            //DsDebugDraw.DrawOBB(newObb, Color.Red);
 
             return intersected;
         }
@@ -153,13 +157,13 @@ namespace DefenseShields.Support
             return center + distanceX * xAxis + distanceY * yAxis + distanceZ * zAxis;
         }
 
-        public static Vector3D ClosestEllipsoidPointToPos(MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, Vector3D point)
+        public static Vector3D ClosestEllipsoidPointToPos(ref MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, ref Vector3D point)
         {
-            var ePos = Vector3D.Transform(point, ellipsoidMatrixInv);
-            var closestLPos = Vector3D.Normalize(ePos);
-            var closestWPos = Vector3D.Transform(closestLPos, ellipsoidMatrix);
+            var ePos = Vector3D.Transform(point, ref ellipsoidMatrixInv);
+            Vector3D closestLPos;
+            Vector3D.Normalize(ref ePos, out closestLPos);
 
-            return closestWPos;
+            return Vector3D.Transform(closestLPos, ref ellipsoidMatrix);
         }
 
         public static double EllipsoidDistanceToPos(ref MatrixD ellipsoidMatrixInv, ref MatrixD ellipsoidMatrix, ref Vector3D point)
@@ -393,6 +397,33 @@ namespace DefenseShields.Support
             return null;
         }
 
+        public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, ref Vector3D shieldHalfExtet, ref Quaternion dividedQuat)
+        {
+            Vector3D halfExtents;
+            Vector3D center;
+
+            if (cubeExists) {
+                halfExtents = block.FatBlock.LocalAABB.HalfExtents;
+                center = block.FatBlock.WorldAABB.Center;
+            }
+            else {
+                Vector3 halfExt;
+                block.ComputeScaledHalfExtents(out halfExt);
+                halfExtents = halfExt;
+                block.ComputeWorldCenter(out center);
+            }
+
+            var normSphere = new BoundingSphereD(Vector3D.Zero, 1f);
+            var transObbCenter = Vector3D.Transform(center, ref ellipsoidMatrixInv);
+            var squishedSize = halfExtents / shieldHalfExtet;
+            var newObb = new MyOrientedBoundingBoxD(transObbCenter, squishedSize, dividedQuat);
+
+            if (!newObb.Intersects(ref normSphere))
+                return null;
+
+            return ClosestEllipsoidPointToPos(ref ellipsoidMatrixInv, ellipsoidMatrix, ref center);
+        }
+
         public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref Quaternion bQuaternion, ref MatrixD matrix, ref MatrixD matrixInv, ref Vector3D[] blockPoints, bool debug = false)
         {
             BoundingBoxD blockBox;
@@ -446,7 +477,7 @@ namespace DefenseShields.Support
             var blockSize = (float)blockBox.HalfExtents.AbsMax() * 2;
             var testDir = Vector3D.Normalize(point0 - point1);
             var ray = new RayD(point0, -testDir);
-            var intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            var intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -459,7 +490,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point0 - point3);
             ray = new RayD(point0, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -472,7 +503,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point0 - point4);
             ray = new RayD(point0, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -485,7 +516,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point1 - point2);
             ray = new RayD(point1, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -498,7 +529,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point1 - point5);
             ray = new RayD(point1, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -511,7 +542,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point2 - point3);
             ray = new RayD(point2, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -524,7 +555,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point2 - point6);
             ray = new RayD(point2, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -537,7 +568,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point3 - point7);
             ray = new RayD(point3, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -550,7 +581,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point4 - point5);
             ray = new RayD(point4, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -563,7 +594,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point4 - point7);
             ray = new RayD(point4, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -576,7 +607,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point5 - point6);
             ray = new RayD(point5, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -589,7 +620,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point6 - point7);
             ray = new RayD(point6, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -993,7 +1024,7 @@ namespace DefenseShields.Support
             var blockSize = (float)obb.HalfExtent.AbsMax() * 2;
             var testDir = Vector3D.Normalize(point0 - point1);
             var ray = new RayD(point0, -testDir);
-            var intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            var intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1006,7 +1037,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point0 - point3);
             ray = new RayD(point0, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1019,7 +1050,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point0 - point4);
             ray = new RayD(point0, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1032,7 +1063,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point1 - point2);
             ray = new RayD(point1, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1045,7 +1076,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point1 - point5);
             ray = new RayD(point1, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1058,7 +1089,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point2 - point3);
             ray = new RayD(point2, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1071,7 +1102,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point2 - point6);
             ray = new RayD(point2, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1084,7 +1115,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point3 - point7);
             ray = new RayD(point3, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1097,7 +1128,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point4 - point5);
             ray = new RayD(point4, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1110,7 +1141,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point4 - point7);
             ray = new RayD(point4, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1123,7 +1154,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point5 - point6);
             ray = new RayD(point5, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);
@@ -1136,7 +1167,7 @@ namespace DefenseShields.Support
 
             testDir = Vector3D.Normalize(point6 - point7);
             ray = new RayD(point6, -testDir);
-            intersect = IntersectEllipsoid(matrixInv, matrix, ray);
+            intersect = IntersectEllipsoid(ref matrixInv, matrix, ref ray);
             if (intersect != null)
             {
                 var point = ray.Position + (testDir * (float)-intersect);

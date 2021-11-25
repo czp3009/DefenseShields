@@ -87,7 +87,6 @@ namespace DefenseShields
         internal readonly MyConcurrentPool<List<MyEntity>> ListMyEntityPool = new MyConcurrentPool<List<MyEntity>>(100);
 
         internal readonly MyConcurrentPool<HashSet<CubeAccel>> SetCubeAccelPool = new MyConcurrentPool<HashSet<CubeAccel>>(100);
-        internal readonly MyConcurrentPool<List<CubeAccel>> ListCubeAccelPool = new MyConcurrentPool<List<CubeAccel>>(100);
         internal readonly MyConcurrentPool<EntIntersectInfo> EntIntersectInfoPool = new MyConcurrentPool<EntIntersectInfo>(100, info => info.Clean());
 
         internal readonly MyConcurrentPool<ImpactRingEffectData> RingPool = new MyConcurrentPool<ImpactRingEffectData>(100);

@@ -84,7 +84,7 @@ namespace DefenseShields.Support
 
             var rayDir = Vector3D.Normalize(Entity.Physics.LinearVelocity);
             var ray = new RayD(Entity.PositionComp.WorldVolume.Center, rayDir);
-            var intersect = CustomCollision.IntersectEllipsoid(Shield.DetectMatrixOutsideInv, Shield.DetectionMatrix, ray);
+            var intersect = CustomCollision.IntersectEllipsoid(ref Shield.DetectMatrixOutsideInv, Shield.DetectionMatrix, ref ray);
             var hitDist = intersect ?? 0;
             var hitPos = ray.Position + (ray.Direction * -hitDist);
 

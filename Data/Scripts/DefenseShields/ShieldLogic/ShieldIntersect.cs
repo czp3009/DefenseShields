@@ -146,7 +146,8 @@
             WebEnts.TryGetValue(ent, out entInfo);
             if (entInfo == null) return;
 
-            var bOriBBoxD = MyOrientedBoundingBoxD.CreateFromBoundingBox(grid.PositionComp.WorldAABB);
+            var bOriBBoxD = new MyOrientedBoundingBoxD(grid.PositionComp.LocalAABB, grid.PositionComp.WorldMatrixRef);
+            DsDebugDraw.DrawOBB(bOriBBoxD, Color.Red);
             if (entInfo.Relation != Ent.EnemyGrid && entInfo.WasInside && EntInside(grid, bOriBBoxD)) return;
             BlockIntersect(grid, ref bOriBBoxD, ref entInfo);
         }
@@ -155,7 +156,7 @@
         {
             var grid = ent as MyCubeGrid;
             if (grid == null) return;
-            if (EntInside(grid, MyOrientedBoundingBoxD.CreateFromBoundingBox(grid.PositionComp.WorldAABB))) return;
+            if (EntInside(grid, new MyOrientedBoundingBoxD(grid.PositionComp.LocalAABB, grid.PositionComp.WorldMatrixRef))) return;
             ShieldGridComponent shieldComponent;
             grid.Components.TryGet(out shieldComponent);
             if (shieldComponent?.DefenseShields == null) return;
@@ -283,6 +284,7 @@
 
                 if (bOriBBoxD.Intersects(ref SOriBBoxD))
                 {
+                    //Log.Line($"obbColl:{CustomCollision.IntersectEllipsoidObb(DetectMatrixOutsideInv, DetectMatrixOutside, bOriBBoxD)}");
                     if (entInfo.Relation == Ent.Shielded &&  _tick - entInfo.RefreshTick == 0)
                     {
                         entInfo.CacheBlockList.Clear();

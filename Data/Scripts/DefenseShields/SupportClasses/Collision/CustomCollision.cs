@@ -104,12 +104,15 @@ namespace DefenseShields.Support
             return (float?)(isNaN ? (double?)null : distance);
         }
 
-        public static bool IntersectEllipsoidObb(MatrixD ellipsoidMatrixInv, MyOrientedBoundingBoxD obb)
+        public static bool IntersectEllipsoidObb(MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, MyOrientedBoundingBoxD obb)
         {
             var normSphere = new BoundingSphereD(Vector3D.Zero, 1f);
 
-            obb.Transform(ref ellipsoidMatrixInv);
-            var intersected = obb.Intersects(ref normSphere);
+            var newObb = new MyOrientedBoundingBoxD(Vector3D.Transform(obb.Center, ellipsoidMatrixInv), Vector3D.Normalize(Vector3D.Transform(obb.HalfExtent, ellipsoidMatrixInv)), obb.Orientation  * Quaternion.CreateFromRotationMatrix(ellipsoidMatrixInv));
+
+            Log.Line($"{newObb.Center} - {newObb.HalfExtent}");
+
+            var intersected = newObb.Intersects(ref normSphere);
 
             return intersected;
         }

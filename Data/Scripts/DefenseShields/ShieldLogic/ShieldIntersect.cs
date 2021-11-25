@@ -284,7 +284,7 @@
 
                 if (bOriBBoxD.Intersects(ref SOriBBoxD))
                 {
-                    //Log.Line($"obbColl:{CustomCollision.IntersectEllipsoidObb(DetectMatrixOutsideInv, DetectMatrixOutside, bOriBBoxD)}");
+                    Log.Line($"obbColl:{CustomCollision.IntersectEllipsoidObb(DetectMatrixOutsideInv, DetectMatrixOutside, bOriBBoxD)}");
                     if (entInfo.Relation == Ent.Shielded &&  _tick - entInfo.RefreshTick == 0)
                     {
                         entInfo.CacheBlockList.Clear();

@@ -1,4 +1,5 @@
-﻿using VRage.Game.ObjectBuilders.Definitions.SessionComponents;
+﻿using Sandbox.ModAPI;
+using VRage.Game.ObjectBuilders.Definitions.SessionComponents;
 using VRage.Utils;
 
 namespace DefenseShields.Support
@@ -115,8 +116,25 @@ namespace DefenseShields.Support
 
             var intersected = newObb.Intersects(ref normSphere);
 
-            //DsDebugDraw.DrawSphere(normSphere, Color.Blue);
-            //DsDebugDraw.DrawOBB(newObb, Color.Red);
+            normSphere.Center += obbCenter + (Vector3D.Forward * 50);
+            newObb.Center += obbCenter + (Vector3D.Forward * 100);
+            DsDebugDraw.DrawSphere(normSphere, Color.Blue);
+            DsDebugDraw.DrawOBB(newObb, Color.Red);
+            return intersected;
+        }
+
+
+        public static bool IntersectEllipsoidObb(MatrixD ellipsoidMatrixInv, MyOrientedBoundingBoxD obb, MyOrientedBoundingBoxD SOriBBoxD)
+        {
+            var normSphere = new BoundingSphereD(Vector3D.Zero, 1f);
+            DsDebugDraw.DrawSphere(normSphere, Color.Blue);
+            var newObb = new MyOrientedBoundingBoxD(
+                Vector3D.Transform(obb.Center, ellipsoidMatrixInv),
+                obb.HalfExtent / SOriBBoxD.HalfExtent, //Vector3D.Normalize(Vector3D.Transform(obb.HalfExtent, ellipsoidMatrixInv)), 
+                Quaternion.Divide(obb.Orientation, SOriBBoxD.Orientation));
+
+            DsDebugDraw.DrawOBB(newObb, Color.Red);
+            var intersected = newObb.Intersects(ref normSphere);
 
             return intersected;
         }
@@ -172,6 +190,19 @@ namespace DefenseShields.Support
             Vector3D closestLPos;
             Vector3D.Normalize(ref ePos, out closestLPos);
             var closestWPos = Vector3D.Transform(closestLPos, ref ellipsoidMatrix);
+            double distToPoint;
+            Vector3D.Distance(ref closestWPos, ref point, out distToPoint);
+            if (ePos.LengthSquared() < 1) distToPoint *= -1;
+
+            return distToPoint;
+        }
+
+        public static double EllipsoidDistanceToPos(ref MatrixD ellipsoidMatrixInv, ref MatrixD ellipsoidMatrix, ref Vector3D point, out Vector3D closestWPos)
+        {
+            var ePos = Vector3D.Transform(point, ref ellipsoidMatrixInv);
+            Vector3D closestLPos;
+            Vector3D.Normalize(ref ePos, out closestLPos);
+            closestWPos = Vector3D.Transform(closestLPos, ref ellipsoidMatrix);
             double distToPoint;
             Vector3D.Distance(ref closestWPos, ref point, out distToPoint);
             if (ePos.LengthSquared() < 1) distToPoint *= -1;
@@ -396,7 +427,7 @@ namespace DefenseShields.Support
             }
             return null;
         }
-
+        /*
         public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, ref Vector3D shieldHalfExtet, ref Quaternion dividedQuat)
         {
             Vector3D halfExtents;
@@ -423,15 +454,17 @@ namespace DefenseShields.Support
 
             return ClosestEllipsoidPointToPos(ref ellipsoidMatrixInv, ellipsoidMatrix, ref center);
         }
-
+        */
         public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref Quaternion bQuaternion, ref MatrixD matrix, ref MatrixD matrixInv, ref Vector3D[] blockPoints, bool debug = false)
         {
             BoundingBoxD blockBox;
             Vector3D center;
+            double radius;
             if (cubeExists)
             {
                 blockBox = block.FatBlock.LocalAABB;
                 center = block.FatBlock.WorldAABB.Center;
+                radius = block.FatBlock.LocalAABB.HalfExtents.AbsMax();
             }
             else
             {
@@ -439,16 +472,17 @@ namespace DefenseShields.Support
                 block.ComputeScaledHalfExtents(out halfExt);
                 blockBox = new BoundingBoxD(-halfExt, halfExt);
                 block.ComputeWorldCenter(out center);
+                radius = halfExt.AbsMax();
             }
-            double distSqr;
-            Vector3D.DistanceSquared(ref blockBox.Min, ref blockBox.Max, out distSqr);
-            var radiusSqr = distSqr * 0.5f;
-           
-            var distFromEllips = EllipsoidDistanceToPos(ref matrixInv, ref matrix, ref center);
-            if (distFromEllips * distFromEllips > radiusSqr)
-            {
+            Vector3D hitPos;
+            var distFromEllips = EllipsoidDistanceToPos(ref matrixInv, ref matrix, ref center, out hitPos);
+
+            if (distFromEllips > radius)
                 return null;
-            }
+            var sphereCheck = block.Min + block.Max == Vector3I.Zero;
+            if (sphereCheck)
+                return hitPos;
+
             // 4 + 5 + 6 + 7 = Front
             // 0 + 1 + 2 + 3 = Back
             // 1 + 2 + 5 + 6 = Top

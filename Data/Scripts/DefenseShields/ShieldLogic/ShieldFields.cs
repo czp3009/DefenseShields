@@ -399,7 +399,7 @@ namespace DefenseShields
 
         internal DamageHandlerHit HandlerImpact { get; set; } = new DamageHandlerHit();
         internal Vector3D WorldImpactPosition { get; set; } = Vector3D.NegativeInfinity;
-        internal Vector3D ShieldSize { get; set; }
+        internal Vector3D ShieldSize;
 
         internal enum HitType
         {

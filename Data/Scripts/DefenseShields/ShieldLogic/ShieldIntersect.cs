@@ -314,7 +314,7 @@ namespace DefenseShields
                             continue;
 
                         var block = accel.Block;
-                        var point = CustomCollision.BlockIntersect(block, accel.CubeExists, ref bOriBBoxD.Orientation, ref sMat, ref DetectMatrixOutsideInv, ref _blockPoints);
+                        var point = CustomCollision.BlockIntersect(block, accel.CubeExists, ref bOriBBoxD, ref sMat, ref DetectMatrixOutsideInv, ref _blockPoints);
                         if (point == null) continue;
 
                         collisionAvg += (Vector3D)point;

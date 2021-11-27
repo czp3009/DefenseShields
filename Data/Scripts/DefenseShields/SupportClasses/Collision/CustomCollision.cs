@@ -455,7 +455,7 @@ namespace DefenseShields.Support
             return ClosestEllipsoidPointToPos(ref ellipsoidMatrixInv, ellipsoidMatrix, ref center);
         }
         */
-        public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref Quaternion bQuaternion, ref MatrixD matrix, ref MatrixD matrixInv, ref Vector3D[] blockPoints, bool debug = false)
+        public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref MyOrientedBoundingBoxD obb, ref MatrixD matrix, ref MatrixD matrixInv, ref Vector3D[] blockPoints, bool debug = false)
         {
             BoundingBoxD blockBox;
             Vector3D center;
@@ -474,6 +474,10 @@ namespace DefenseShields.Support
                 block.ComputeWorldCenter(out center);
                 radius = halfExt.AbsMax();
             }
+            var worldSphere = new BoundingSphereD(center, radius);
+            if (!obb.Intersects(ref worldSphere))
+                return null;
+
             Vector3D hitPos;
             var distFromEllips = EllipsoidDistanceToPos(ref matrixInv, ref matrix, ref center, out hitPos);
 
@@ -487,7 +491,7 @@ namespace DefenseShields.Support
             // 0 + 1 + 2 + 3 = Back
             // 1 + 2 + 5 + 6 = Top
             // 0 + 3 + 4 + 7 = Bottom
-            new MyOrientedBoundingBoxD(center, blockBox.HalfExtents, bQuaternion).GetCorners(blockPoints, 0);
+            new MyOrientedBoundingBoxD(center, blockBox.HalfExtents, obb.Orientation).GetCorners(blockPoints, 0);
             blockPoints[8] = center;
             var point0 = blockPoints[0];
             if (Vector3.Transform(point0, matrixInv).LengthSquared() <= 1) return point0;

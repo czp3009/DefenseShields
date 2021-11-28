@@ -270,8 +270,13 @@ namespace DefenseShields
                 GridIntersect(ent);
                 return;
             }
+            var iFortified = DsSet.Settings.FortifyShield && DsState.State.Enhancer;
+            var bFortified = ds.DsSet.Settings.FortifyShield &&ds. DsState.State.Enhancer;
 
-            if (MyGrid.EntityId > grid.EntityId) ComputeCollisionPhysics(grid, MyGrid, collisionAvg);
+            var iWinForceFight = iFortified && !bFortified;
+            var iLoseForceFight = !iFortified && bFortified;
+            if (!iLoseForceFight && (MyGrid.EntityId > grid.EntityId || iWinForceFight)) 
+                ComputeCollisionPhysics(grid, MyGrid, collisionAvg);
             else if (!_isServer) return;
 
             var damage = ((ds._shieldMaxChargeRate * ConvToHp) * DsState.State.ModulateKinetic) * 0.01666666666f;

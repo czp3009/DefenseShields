@@ -55,15 +55,15 @@
 
         internal static void ComputeDamage(Modulators comp, float newValue)
         {
-            if (newValue < 100)
+            if (newValue < 100)//modulating for kinetic protection
             {
-                comp.ModState.State.ModulateEnergy = 200 - newValue;
-                comp.ModState.State.ModulateKinetic = newValue;
+                comp.ModState.State.ModulateEnergy = 600 - newValue * 5;// this nets newValue 20 = ModEnergy 500%, newValue 99 = ModEnergy 105%
+                comp.ModState.State.ModulateKinetic = newValue; //this is fine
             }
-            else if (newValue > 100)
+            else if (newValue > 100)//modulating for energy protection
             {
-                comp.ModState.State.ModulateEnergy = 200 - newValue;
-                comp.ModState.State.ModulateKinetic = newValue;
+                comp.ModState.State.ModulateEnergy = 200 - newValue; //this is fine
+                comp.ModState.State.ModulateKinetic = (newValue-100) * 5 + 100;// this nets newValue 180 = ModKinetic 500%, newValue 101 = ModKinetic 105%
             }
             else
             {

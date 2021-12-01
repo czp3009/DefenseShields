@@ -1,4 +1,5 @@
 ﻿using VRage.Collections;
+using VRage.Game;
 
 namespace DefenseShields
 {
@@ -142,6 +143,7 @@ namespace DefenseShields
 
             var bOriBBoxD = new MyOrientedBoundingBoxD(grid.PositionComp.LocalAABB, grid.PositionComp.WorldMatrixRef);
             if (entInfo.Relation != Ent.EnemyGrid && entInfo.WasInside && EntInside(grid, ref bOriBBoxD)) return;
+            DsDebugDraw.DrawOBB(bOriBBoxD, Color.Red, MySimpleObjectRasterizer.Solid);
             BlockIntersect(grid, ref bOriBBoxD, ref entInfo);
         }
 
@@ -292,7 +294,12 @@ namespace DefenseShields
             {
                 if (entInfo == null || breaching == null || breaching.MarkedForClose) return;
 
-                if (bOriBBoxD.Intersects(ref SOriBBoxD))
+                Quaternion quadMagic;
+                Quaternion.Divide(ref bOriBBoxD.Orientation, ref SOriBBoxD.Orientation, out quadMagic);
+                var sMatrix = DetectMatrixOutsideInv;
+
+                //if (bOriBBoxD.Intersects(ref SOriBBoxD))
+                if (CustomCollision.IntersectEllipsoidObb(ref sMatrix, ref bOriBBoxD.Center, ref bOriBBoxD.HalfExtent, ref SOriBBoxD.HalfExtent, ref quadMagic))
                 {
                     if (_tick - entInfo.RefreshTick == 0 || entInfo.CacheBlockList.IsEmpty)
                     {

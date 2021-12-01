@@ -111,13 +111,12 @@ namespace DefenseShields.Support
             var normSphere = new BoundingSphereD(Vector3D.Zero, 1f);
             var transObbCenter = Vector3D.Transform(obbCenter, ref ellipsoidMatrixInv);
             var squishedSize = obbHalfExtent / shieldHalfExtet;
-            //var quatMagic = Quaternion.Divide(obb.Orientation, SOriBBoxD.Orientation);
             var newObb = new MyOrientedBoundingBoxD(transObbCenter, squishedSize, dividedQuat);
 
             var intersected = newObb.Intersects(ref normSphere);
 
             normSphere.Center += obbCenter + (Vector3D.Forward * 50);
-            newObb.Center += obbCenter + (Vector3D.Forward * 100);
+            newObb.Center += obbCenter + (Vector3D.Forward * 50);
             DsDebugDraw.DrawSphere(normSphere, Color.Blue);
             DsDebugDraw.DrawOBB(newObb, Color.Red);
             return intersected;
@@ -427,7 +426,7 @@ namespace DefenseShields.Support
             }
             return null;
         }
-        /*
+
         public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref MatrixD ellipsoidMatrixInv, MatrixD ellipsoidMatrix, ref Vector3D shieldHalfExtet, ref Quaternion dividedQuat)
         {
             Vector3D halfExtents;
@@ -454,7 +453,7 @@ namespace DefenseShields.Support
 
             return ClosestEllipsoidPointToPos(ref ellipsoidMatrixInv, ellipsoidMatrix, ref center);
         }
-        */
+
         public static Vector3D? BlockIntersect(IMySlimBlock block, bool cubeExists, ref MyOrientedBoundingBoxD obb, ref MatrixD matrix, ref MatrixD matrixInv, ref Vector3D[] blockPoints, bool debug = false)
         {
             BoundingBoxD blockBox;

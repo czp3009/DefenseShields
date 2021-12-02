@@ -57,13 +57,13 @@
         {
             if (newValue < 100)//modulating for kinetic protection
             {
-                comp.ModState.State.ModulateEnergy = (600 - newValue * 5)/2;// this nets newValue 20 = ModEnergy 250%, newValue 99 = ModEnergy 102.5%
+                comp.ModState.State.ModulateEnergy = (100 - newValue) * 1.875f + 100;// this nets newValue 20 = ModEnergy 250%, newValue 99 = ModEnergy 102.5%
                 comp.ModState.State.ModulateKinetic = newValue; //this is fine
             }
             else if (newValue > 100)//modulating for energy protection
             {
                 comp.ModState.State.ModulateEnergy = 200 - newValue; //this is fine
-                comp.ModState.State.ModulateKinetic = ((newValue-100) * 5 + 100)/2;// this nets newValue 180 = ModKinetic 250%, newValue 101 = ModKinetic 102.5%
+                comp.ModState.State.ModulateKinetic = (newValue-100) * 1.875f + 100;// this nets newValue 180 = ModKinetic 250%, newValue 101 = ModKinetic 102.5%
             }
             else
             {

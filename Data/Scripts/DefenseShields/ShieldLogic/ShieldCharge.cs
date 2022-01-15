@@ -105,6 +105,8 @@ namespace DefenseShields
                 }
                 else if (fortify)
                     bonus = (diff / 2);
+
+                bonus *= Session.Enforced.PowerScaler;
             }
 
             var maxHpScaler = DsState.State.CapModifier + bonus;

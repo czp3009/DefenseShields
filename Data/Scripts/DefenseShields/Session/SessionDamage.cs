@@ -97,11 +97,6 @@ namespace DefenseShields
                         if (Tick - protectors.BlockingTick > 10 && protectors.LastAttackerWasInside) protectors.BlockingShield = null;
                     }
                     catch (Exception ex) { Log.Line($"Exception in DamageFindShield: {ex}"); }
-                    var iShield = protectors.IntegrityShield;
-                    var iShieldActive = iShield != null && iShield.DsState.State.Online && !iShield.DsState.State.Lowered;
-                    
-                    if (iShieldActive)
-                        info.Amount *= 4;
 
                     try
                     {
@@ -144,8 +139,8 @@ namespace DefenseShields
                             }
 
                             var bullet = damageType == MyDamageType.Bullet;
-                            if (bullet || isDeformationDmg) info.Amount *= shield.DsState.State.ModulateEnergy;
-                            else info.Amount *= shield.DsState.State.ModulateKinetic;
+                            if (bullet || isDeformationDmg) info.Amount = info.Amount * shield.DsState.State.ModulateEnergy;
+                            else info.Amount = info.Amount * shield.DsState.State.ModulateKinetic;
 
                             var noHits = !DedicatedServer && shield.Absorb < 1;
                             var hitSlotAvailable = noHits & (bullet && shield.KineticCoolDown == -1) || (!bullet && shield.EnergyCoolDown == -1);
@@ -177,7 +172,8 @@ namespace DefenseShields
                     }
                     catch (Exception ex) { Log.Line($"Exception in DamageHandlerActive: {ex}"); }
 
-                    if (iShieldActive)
+                    var iShield = protectors.IntegrityShield;
+                    if (iShield != null && iShield.DsState.State.Online && !iShield.DsState.State.Lowered)
                     {
                         var attackingVoxel = trueAttacker as MyVoxelBase;
                         if (attackingVoxel != null || (trueAttacker is MyCubeGrid) && !(damageType == MPEnergy || damageType == MPKinetic || damageType == MPExplosion)) 

@@ -825,7 +825,7 @@ namespace DefenseShields
             ShieldGridComponent c;
             if (Session.Instance.IdToBus.TryGetValue(entity.EntityId, out c) && c?.DefenseShields != null)
             {
-                if (onlyIfOnline && (!c.DefenseShields.DsState.State.Online || c.DefenseShields.DsState.State.Lowered) || c.DefenseShields.ReInforcedShield) return null;
+                if (onlyIfOnline && (!c.DefenseShields.DsState.State.Online || c.DefenseShields.DsState.State.Lowered)) return null;
                 var s = c.DefenseShields;
                 var state = s.DsState.State;
                 var info = new MyTuple<IMyTerminalBlock, MyTuple<bool, bool, float, float, float, int>, MyTuple<MatrixD, MatrixD>>
@@ -833,7 +833,7 @@ namespace DefenseShields
                     Item1 = s.Shield,
                     Item2 =
                     {
-                        Item1 = true,
+                        Item1 = !c.DefenseShields.ReInforcedShield,
                         Item2 = s.DsSet.Settings.SideShunting,
                         Item3 = state.Charge,
                         Item4 = s.ShieldMaxCharge,

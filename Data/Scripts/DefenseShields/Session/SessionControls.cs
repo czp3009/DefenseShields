@@ -107,18 +107,18 @@ namespace DefenseShields
                 BackShield = TerminalHelpers.AddOnOff(comp?.Shield, "DS-C_BackShield", Localization.GetText("TerminalBackShieldTitle"), Localization.GetText("TerminalBackShieldTooltip"), Localization.GetText("TerminalSwitchPush"), Localization.GetText("TerminalSwitchPull"), DsUi.GetBackShield, DsUi.SetBackShield, DsUi.RedirectEnabled);
 
 
-                CreateAction<IMyUpgradeModule>(ToggleShield);
+                ControllerCreateAction<IMyUpgradeModule>(ToggleShield);
 
-                CreateAction<IMyUpgradeModule>(SphereFit);
-                CreateFitAction<IMyUpgradeModule>(Fit);
-                CreateAction<IMyUpgradeModule>(FortifyShield);
+                ControllerCreateAction<IMyUpgradeModule>(SphereFit);
+                ControllerCreateFitAction<IMyUpgradeModule>(Fit);
+                ControllerCreateAction<IMyUpgradeModule>(FortifyShield);
 
 
-                CreateAction<IMyUpgradeModule>(HideActiveCheckBox);
+                ControllerCreateAction<IMyUpgradeModule>(HideActiveCheckBox);
                 //CreateAction<IMyUpgradeModule>(RefreshAnimationCheckBox);
                 //CreateAction<IMyUpgradeModule>(HitWaveAnimationCheckBox);
-                CreateAction<IMyUpgradeModule>(SendToHudCheckBox);
-                CreateAction<IMyUpgradeModule>(BatteryBoostCheckBox);
+                ControllerCreateAction<IMyUpgradeModule>(SendToHudCheckBox);
+                ControllerCreateAction<IMyUpgradeModule>(BatteryBoostCheckBox);
                 CreateDepthAction<IMyUpgradeModule>(DepthSlider);
                 CreateWidthAction<IMyUpgradeModule>(WidthSlider);
                 CreateHeightAction<IMyUpgradeModule>(HeightSlider);
@@ -130,7 +130,7 @@ namespace DefenseShields
                 CreateShuntAction<IMyUpgradeModule>(FrontShield);
                 CreateShuntAction<IMyUpgradeModule>(BackShield);
 
-                CreateAction<IMyUpgradeModule>(SideShunting);
+                ControllerCreateAction<IMyUpgradeModule>(SideShunting);
 
                 DsControl = true;
             }
@@ -264,6 +264,18 @@ namespace DefenseShields
             sb.Append(DsUi.GetOffsetHeight(blk));
         }
 
+        internal static bool IsController(IMyTerminalBlock blk)
+        {
+            var comp = blk?.GameLogic?.GetAs<DefenseShields>();
+            return comp != null;
+        }
+
+        internal static bool IsModulator(IMyTerminalBlock blk)
+        {
+            var comp = blk?.GameLogic?.GetAs<Modulators>();
+            return comp != null;
+        }
+
         public void CreateDepthAction<T>(IMyTerminalControlSlider c)
         {
             var id = ((IMyTerminalControl)c).Id;
@@ -333,7 +345,7 @@ namespace DefenseShields
             MyAPIGateway.TerminalControls.AddAction<T>(action1);
         }
 
-        public void CreateFitAction<T>(IMyTerminalControlSlider c)
+        public void ControllerCreateFitAction<T>(IMyTerminalControlSlider c)
         {
             var id = ((IMyTerminalControl)c).Id;
 
@@ -404,7 +416,7 @@ namespace DefenseShields
             catch (Exception ex) { Log.Line($"Exception in CreateO2GeneratorUi: {ex}"); }
         }
 
-        public void CreateAction<T>(IMyTerminalControlOnOffSwitch c)
+        public void ControllerCreateAction<T>(IMyTerminalControlOnOffSwitch c)
         {
             try
             {
@@ -418,6 +430,7 @@ namespace DefenseShields
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\SmallShipToggle.dds";
 
                     a.ValidForGroups = true;
+                    a.Enabled = IsController;
                     a.Action = (b) => c.Setter(b, !c.Getter(b));
                     a.Writer = writer;
 
@@ -428,6 +441,7 @@ namespace DefenseShields
                     a.Name = new StringBuilder(c.Title.String).Append(" - ").Append(c.OnText.String);
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\SmallShipSwitchOn.dds";
                     a.ValidForGroups = true;
+                    a.Enabled = IsController;
                     a.Action = (b) => c.Setter(b, true);
                     a.Writer = writer;
 
@@ -438,6 +452,7 @@ namespace DefenseShields
                     a.Name = new StringBuilder(c.Title.String).Append(" - ").Append(c.OffText.String);
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\LargeShipSwitchOn.dds";
                     a.ValidForGroups = true;
+                    a.Enabled = IsController;
                     a.Action = (b) => c.Setter(b, false);
                     a.Writer = writer;
 
@@ -461,6 +476,7 @@ namespace DefenseShields
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\SmallShipToggle.dds";
 
                     a.ValidForGroups = true;
+                    a.Enabled = IsController;
                     a.Action = (b) => c.Setter(b, !c.Getter(b));
                     a.Writer = writer;
 
@@ -471,6 +487,7 @@ namespace DefenseShields
                     a.Name = new StringBuilder(c.Title.String).Append(" - ").Append($" {Localization.GetText("TerminalSwitchPush")}");
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\SmallShipSwitchOn.dds";
                     a.ValidForGroups = true;
+                    a.Enabled = IsController;
                     a.Action = (b) => c.Setter(b, true);
                     a.Writer = writer;
 
@@ -481,6 +498,7 @@ namespace DefenseShields
                     a.Name = new StringBuilder(c.Title.String).Append(" - ").Append($" {Localization.GetText("TerminalSwitchPull")}");
                     a.Icon = gamePath + @"\Textures\GUI\Icons\Actions\LargeShipSwitchOn.dds";
                     a.ValidForGroups = true;
+                    a.Enabled = IsController;
                     a.Action = (b) => c.Setter(b, false);
                     a.Writer = writer;
 
@@ -605,6 +623,8 @@ namespace DefenseShields
                     a.Name = new StringBuilder(name).Append(" On/Off");
                     a.Icon = iconToggle;
                     a.ValidForGroups = true;
+                    a.Enabled = IsModulator;
+
                     a.Action = (b) => c.Setter(b, !c.Getter(b));
                     if (writer != null)
                         a.Writer = writer;
@@ -620,6 +640,7 @@ namespace DefenseShields
                         a.Icon = iconOn;
                         a.ValidForGroups = true;
                         a.Action = (b) => c.Setter(b, true);
+                        a.Enabled = IsModulator;
                         if (writer != null)
                             a.Writer = writer;
 
@@ -630,6 +651,77 @@ namespace DefenseShields
                         a.Name = new StringBuilder(name).Append(" Off");
                         a.Icon = iconOff;
                         a.ValidForGroups = true;
+                        a.Enabled = IsModulator;
+                        a.Action = (b) => c.Setter(b, false);
+                        if (writer != null)
+                            a.Writer = writer;
+
+                        MyAPIGateway.TerminalControls.AddAction<T>(a);
+                    }
+                }
+            }
+            catch (Exception ex) { Log.Line($"Exception in CreateAction<T>(IMyTerminalControlCheckbox: {ex}"); }
+        }
+
+
+        private void ControllerCreateAction<T>(IMyTerminalControlCheckbox c,
+    bool addToggle = true,
+    bool addOnOff = false,
+    string iconPack = null,
+    string iconToggle = null,
+    string iconOn = null,
+    string iconOff = null)
+        {
+            try
+            {
+
+                var id = ((IMyTerminalControl)c).Id;
+                var name = c.Title.String;
+                Action<IMyTerminalBlock, StringBuilder> writer = (b, s) => s.Append(c.Getter(b) ? c.OnText : c.OffText);
+
+                if (iconToggle == null && iconOn == null && iconOff == null)
+                {
+                    var pack = iconPack ?? string.Empty;
+                    var gamePath = MyAPIGateway.Utilities.GamePaths.ContentPath;
+                    iconToggle = gamePath + @"\Textures\GUI\Icons\Actions\" + pack + "Toggle.dds";
+                    iconOn = gamePath + @"\Textures\GUI\Icons\Actions\" + pack + "SwitchOn.dds";
+                    iconOff = gamePath + @"\Textures\GUI\Icons\Actions\" + pack + "SwitchOff.dds";
+                }
+
+                if (addToggle)
+                {
+                    var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_Toggle");
+                    a.Name = new StringBuilder(name).Append(" On/Off");
+                    a.Icon = iconToggle;
+                    a.ValidForGroups = true;
+                    a.Enabled = IsController;
+                    a.Action = (b) => c.Setter(b, !c.Getter(b));
+                    if (writer != null)
+                        a.Writer = writer;
+
+                    MyAPIGateway.TerminalControls.AddAction<T>(a);
+                }
+
+                if (addOnOff)
+                {
+                    {
+                        var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_On");
+                        a.Name = new StringBuilder(name).Append(" On");
+                        a.Icon = iconOn;
+                        a.ValidForGroups = true;
+                        a.Enabled = IsController;
+                        a.Action = (b) => c.Setter(b, true);
+                        if (writer != null)
+                            a.Writer = writer;
+
+                        MyAPIGateway.TerminalControls.AddAction<T>(a);
+                    }
+                    {
+                        var a = MyAPIGateway.TerminalControls.CreateAction<T>(id + "_Off");
+                        a.Name = new StringBuilder(name).Append(" Off");
+                        a.Icon = iconOff;
+                        a.ValidForGroups = true;
+                        a.Enabled = IsController;
                         a.Action = (b) => c.Setter(b, false);
                         if (writer != null)
                             a.Writer = writer;
@@ -711,6 +803,7 @@ namespace DefenseShields
                     c.Setter(b, 95f);
                     return;
                 }
+                c.Enabled = IsModulator;
                 c.Setter(b, c.Getter(b) + 5f);
             }
             catch (Exception ex) { Log.Line($"Exception in ActionSubtractChargeRate: {ex}"); }
@@ -729,6 +822,7 @@ namespace DefenseShields
                     c.Setter(b, 20f);
                     return;
                 }
+                c.Enabled = IsModulator;
                 c.Setter(b, c.Getter(b) - 5f);
             }
             catch (Exception ex) { Log.Line($"Exception in ActionSubtractChargeRate: {ex}"); }
@@ -762,6 +856,7 @@ namespace DefenseShields
                         a.Name.Append(" (").Append(defaultValue.ToString("0.###")).Append(")");
                     a.Icon = iconReset;
                     a.ValidForGroups = true;
+                    a.Enabled = IsModulator;
                     a.Action = (b) => c.Setter(b, gridSizeDefaultValue ? b.CubeGrid.GridSize : defaultValue);
                     a.Writer = (b, s) => s.Append(c.Getter(b));
 
@@ -772,6 +867,7 @@ namespace DefenseShields
                     a.Name = new StringBuilder($"{Localization.GetText("ActionIncrease")} ").Append(name).Append(" (+").Append(modifier.ToString("0.###")).Append(")");
                     a.Icon = iconIncrease;
                     a.ValidForGroups = true;
+                    a.Enabled = IsModulator;
                     a.Action = ActionAddDamageMod;
                     a.Writer = (b, s) => s.Append(c.Getter(b));
 
@@ -782,6 +878,7 @@ namespace DefenseShields
                     a.Name = new StringBuilder($"{Localization.GetText("ActionDecrease")} ").Append(name).Append(" (-").Append(modifier.ToString("0.###")).Append(")");
                     a.Icon = iconDecrease;
                     a.ValidForGroups = true;
+                    a.Enabled = IsModulator;
                     a.Action = ActionSubtractDamageMod;
                     a.Writer = (b, s) => s.Append(c.Getter(b).ToString("0.###"));
 
@@ -800,6 +897,7 @@ namespace DefenseShields
                 var damageMod = controls.First((x) => x.Id.ToString() == "DS-M_DamageModulation");
                 var c = (IMyTerminalControlSlider)damageMod;
                 var newValue = MathHelper.Clamp(Math.Round(c.Getter(b) + 10f), 20f, 180f);
+                c.Enabled = IsModulator;
                 c.Setter(b, (float) newValue);
             }
             catch (Exception ex) { Log.Line($"Exception in ActionAddDamageMod: {ex}"); }
@@ -814,6 +912,7 @@ namespace DefenseShields
                 var chargeRate = controls.First((x) => x.Id.ToString() == "DS-M_DamageModulation");
                 var c = (IMyTerminalControlSlider)chargeRate;
                 var newValue = MathHelper.Clamp(Math.Round(c.Getter(b) - 10f), 20f, 180f);
+                c.Enabled = IsModulator;
                 c.Setter(b, (float)newValue);
             }
             catch (Exception ex) { Log.Line($"Exception in ActionSubtractDamageMod: {ex}"); }

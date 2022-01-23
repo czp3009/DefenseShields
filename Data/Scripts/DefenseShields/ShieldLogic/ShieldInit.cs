@@ -122,6 +122,11 @@ namespace DefenseShields
                         _hideColor = true;
                         _supressedColor = false;
                         break;
+                    case 10:
+                        _modelPassive = ModelDirty;
+                        _hideColor = true;
+                        _supressedColor = false;
+                        break;
                     default:
                         _modelPassive = ModelMediumReflective;
                         _hideColor = false;

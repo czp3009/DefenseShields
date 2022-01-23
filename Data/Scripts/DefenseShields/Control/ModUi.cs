@@ -18,7 +18,7 @@
             Session.Instance.ModGrids.Visible = ShowControl;
             Session.Instance.ModAllies.Enabled = block => true;
             Session.Instance.ModAllies.Visible = ShowControl;
-            Session.Instance.ModEmp.Enabled = block => true;
+            Session.Instance.ModEmp.Enabled = block => false;
             Session.Instance.ModEmp.Visible = ShowEMP;
             Session.Instance.ModReInforce.Enabled = block => true;
             Session.Instance.ModReInforce.Visible = ShowReInforce;
@@ -128,6 +128,7 @@
 
         internal static bool ShowEMP(IMyTerminalBlock block)
         {
+            return false;
             var comp = block?.GameLogic?.GetAs<Modulators>();
             if (comp?.ShieldComp?.DefenseShields == null || comp.ShieldComp.DefenseShields.IsStatic) return false;
 

@@ -129,6 +129,7 @@ namespace DefenseShields
         private const string ModelGold = "\\Models\\Cubes\\ShieldPassive05.mwm";
         private const string ModelOrange = "\\Models\\Cubes\\ShieldPassive04.mwm";
         private const string ModelCyan = "\\Models\\Cubes\\ShieldPassive03.mwm";
+        private const string ModelDirty = "\\Models\\Cubes\\Large\\InnerShield.mwm";
 
         private readonly List<IMyBatteryBlock> _batteryBlocks = new List<IMyBatteryBlock>();
         private readonly RunningAverage _dpsAvg = new RunningAverage(2);

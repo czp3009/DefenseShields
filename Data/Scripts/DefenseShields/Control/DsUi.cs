@@ -26,6 +26,7 @@ namespace DefenseShields
             new MyTerminalControlComboBoxItem() { Key = 7, Value = MyStringId.GetOrCompute("Medium Reflective Gold Tint") },
             new MyTerminalControlComboBoxItem() { Key = 8, Value = MyStringId.GetOrCompute("Medium Reflective Orange Tint") },
             new MyTerminalControlComboBoxItem() { Key = 9, Value = MyStringId.GetOrCompute("Medium Reflective Cyan Tint") },
+            new MyTerminalControlComboBoxItem() { Key = 10, Value = MyStringId.GetOrCompute("Textured") },
         };
 
         private static readonly List<MyTerminalControlComboBoxItem> VisibleList = new List<MyTerminalControlComboBoxItem>()
